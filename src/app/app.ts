@@ -23,4 +23,19 @@ export class App {
     ],
     total: 229.97,
   };
+
+  increaseQuantity(productName: string) {
+    const line = this.order.lines.find((item) => item.productName === productName);
+
+    if (!line) {
+      return;
+    }
+
+    line.quantity += 1;
+
+    this.order.total = this.order.lines.reduce(
+      (sum, item) => sum + item.quantity * item.unitPrice,
+      0,
+    );
+  }
 }

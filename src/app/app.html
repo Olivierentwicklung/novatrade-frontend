@@ -12,6 +12,14 @@
         <h2 class="font-semibold">{{ line.productName }}</h2>
         <p>Quantity: {{ line.quantity }}</p>
         <p>Unit price: {{ line.unitPrice }}</p>
+        <button
+          type="button"
+          class="mt-3 rounded border px-4 py-2 font-medium"
+          [attr.aria-label]="'Increase ' + line.productName + ' quantity'"
+          (click)="increaseQuantity(line.productName)"
+        >
+          Increase quantity
+        </button>
       </article>
     }
   </section>
