@@ -76,4 +76,18 @@ describe('App', () => {
 
     expect(compiled.textContent).toContain('Quantity: 1');
   });
+
+  it('should submit a draft order', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const submitButton = compiled.querySelector('[aria-label="Submit order"]') as HTMLButtonElement;
+
+    submitButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.textContent).toContain('Submitted');
+  });
 });
