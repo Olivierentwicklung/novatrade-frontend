@@ -14,10 +14,16 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should display the order', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
+
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, novatrade-frontend');
+
+    expect(compiled.textContent).toContain('ORD-1001');
+    expect(compiled.textContent).toContain('Mechanical Keyboard');
+    expect(compiled.textContent).toContain('Wireless Mouse');
+    expect(compiled.textContent).toContain('Draft');
+    expect(compiled.textContent).toContain('229.97');
   });
 });
