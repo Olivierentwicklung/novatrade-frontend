@@ -43,4 +43,21 @@ describe('App', () => {
     expect(compiled.textContent).toContain('Quantity: 3');
     expect(compiled.textContent).toContain('279.96');
   });
+
+  it('should update the total when a product is removed', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const removeButton = compiled.querySelector(
+      '[aria-label="Remove Wireless Mouse"]',
+    ) as HTMLButtonElement;
+
+    removeButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.textContent).not.toContain('Wireless Mouse');
+    expect(compiled.textContent).toContain('129.99');
+  });
 });
