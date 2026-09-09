@@ -60,4 +60,20 @@ describe('App', () => {
     expect(compiled.textContent).not.toContain('Wireless Mouse');
     expect(compiled.textContent).toContain('129.99');
   });
+
+  it('should not reduce a product quantity below one', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const decreaseButton = compiled.querySelector(
+      '[aria-label="Decrease Mechanical Keyboard quantity"]',
+    ) as HTMLButtonElement;
+
+    decreaseButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.textContent).toContain('Quantity: 1');
+  });
 });
