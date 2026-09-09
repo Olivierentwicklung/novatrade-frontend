@@ -38,4 +38,13 @@ export class App {
       0,
     );
   }
+
+  removeProduct(productName: string) {
+    this.order.lines = this.order.lines.filter((item) => item.productName !== productName);
+
+    this.order.total = this.order.lines.reduce(
+      (sum, item) => sum + item.quantity * item.unitPrice,
+      0,
+    );
+  }
 }
