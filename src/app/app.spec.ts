@@ -26,4 +26,21 @@ describe('App', () => {
     expect(compiled.textContent).toContain('Draft');
     expect(compiled.textContent).toContain('229.97');
   });
+
+  it('should update the total when a product quantity increases', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const increaseButton = compiled.querySelector(
+      '[aria-label="Increase Wireless Mouse quantity"]',
+    ) as HTMLButtonElement;
+
+    increaseButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.textContent).toContain('Quantity: 3');
+    expect(compiled.textContent).toContain('279.96');
+  });
 });
