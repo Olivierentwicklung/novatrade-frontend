@@ -47,4 +47,19 @@ export class App {
       0,
     );
   }
+
+  decreaseQuantity(productName: string) {
+    const line = this.order.lines.find((item) => item.productName === productName);
+
+    if (!line || line.quantity <= 1) {
+      return;
+    }
+
+    line.quantity -= 1;
+
+    this.order.total = this.order.lines.reduce(
+      (sum, item) => sum + item.quantity * item.unitPrice,
+      0,
+    );
+  }
 }
