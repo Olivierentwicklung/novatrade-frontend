@@ -62,4 +62,12 @@ export class App {
       0,
     );
   }
+
+  submitOrder() {
+    if (this.order.status !== 'Draft') {
+      return;
+    }
+
+    this.order.status = 'Submitted';
+  }
 }
