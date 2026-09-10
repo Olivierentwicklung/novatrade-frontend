@@ -63,7 +63,7 @@ export class App {
     );
   }
 
-  submitOrder() {
+  placeOrder() {
     if (this.order.status !== 'Draft') {
       return;
     }
