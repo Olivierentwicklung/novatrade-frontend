@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { OrderLine } from './order-line';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -119,5 +120,25 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(compiled.textContent).toContain('Draft');
+  });
+
+  it('should display the total price for a product entry', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    app.order.lines = [new OrderLine('Test Product', 3, 20)];
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const productEntry = Array.from(compiled.querySelectorAll('article')).find((element) =>
+      element.textContent?.includes('Test Product'),
+    );
+
+    expect(productEntry).toBeTruthy();
+    expect(productEntry?.textContent).toContain('Quantity: 3');
+    expect(productEntry?.textContent).toContain('Unit price: 20');
+    expect(productEntry?.textContent).toContain('Line total: 60');
   });
 });
