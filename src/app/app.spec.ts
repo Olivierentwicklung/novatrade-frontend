@@ -44,7 +44,7 @@ describe('App', () => {
     expect(compiled.textContent).toContain('279.96');
   });
 
-  it('should update the total when a product is removed', async () => {
+  it('should remove a product from the order and update the total', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 

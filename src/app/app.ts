@@ -39,7 +39,7 @@ export class App {
     );
   }
 
-  removeProduct(productName: string) {
+  removeProductFromOrder(productName: string) {
     this.order.lines = this.order.lines.filter((item) => item.productName !== productName);
 
     this.order.total = this.order.lines.reduce(
