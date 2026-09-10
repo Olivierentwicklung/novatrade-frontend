@@ -64,7 +64,7 @@ export class App {
   }
 
   placeOrder() {
-    if (this.order.status !== 'Draft') {
+    if (this.order.status !== 'Draft' || this.order.lines.length === 0) {
       return;
     }
 
