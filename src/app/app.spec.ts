@@ -141,4 +141,21 @@ describe('App', () => {
     expect(productEntry?.textContent).toContain('Unit price: 20');
     expect(productEntry?.textContent).toContain('Line total: 60');
   });
+
+  it('should disable decreasing a product at minimum quantity', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    app.order.lines = [new OrderLine('Test Product', 1, 20)];
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const decreaseButton = compiled.querySelector(
+      '[aria-label="Decrease Test Product quantity"]',
+    ) as HTMLButtonElement;
+
+    expect(decreaseButton.disabled).toBe(true);
+  });
 });
