@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { calculateOrderTotal } from './calculate-order-total';
 
 @Component({
   selector: 'app-root',
@@ -63,9 +64,6 @@ export class App {
   }
 
   private recalculateTotal() {
-    this.order.total = this.order.lines.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice,
-      0,
-    );
+    this.order.total = calculateOrderTotal(this.order.lines);
   }
 }
