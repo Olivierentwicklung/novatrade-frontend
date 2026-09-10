@@ -27,7 +27,7 @@ describe('App', () => {
     expect(compiled.textContent).toContain('229.97');
   });
 
-  it('should update the total when a product quantity increases', async () => {
+  it('should increase a product quantity and update the total', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
@@ -44,7 +44,7 @@ describe('App', () => {
     expect(compiled.textContent).toContain('279.96');
   });
 
-  it('should update the total when a product is removed', async () => {
+  it('should remove a product from the order and update the total', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
@@ -61,7 +61,7 @@ describe('App', () => {
     expect(compiled.textContent).toContain('129.99');
   });
 
-  it('should not reduce a product quantity below one', async () => {
+  it('should not decrease a product quantity below one', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
@@ -77,13 +77,13 @@ describe('App', () => {
     expect(compiled.textContent).toContain('Quantity: 1');
   });
 
-  it('should submit a draft order', async () => {
+  it('should place a draft order', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
 
-    const submitButton = compiled.querySelector('[aria-label="Submit order"]') as HTMLButtonElement;
+    const submitButton = compiled.querySelector('[aria-label="Place order"]') as HTMLButtonElement;
 
     submitButton.click();
     fixture.detectChanges();

@@ -24,7 +24,7 @@ export class App {
     total: 229.97,
   };
 
-  increaseQuantity(productName: string) {
+  increaseProductQuantity(productName: string) {
     const line = this.order.lines.find((item) => item.productName === productName);
 
     if (!line) {
@@ -39,7 +39,7 @@ export class App {
     );
   }
 
-  removeProduct(productName: string) {
+  removeProductFromOrder(productName: string) {
     this.order.lines = this.order.lines.filter((item) => item.productName !== productName);
 
     this.order.total = this.order.lines.reduce(
@@ -48,7 +48,7 @@ export class App {
     );
   }
 
-  decreaseQuantity(productName: string) {
+  decreaseProductQuantity(productName: string) {
     const line = this.order.lines.find((item) => item.productName === productName);
 
     if (!line || line.quantity <= 1) {
@@ -63,7 +63,7 @@ export class App {
     );
   }
 
-  submitOrder() {
+  placeOrder() {
     if (this.order.status !== 'Draft') {
       return;
     }
