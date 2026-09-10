@@ -1,7 +1,11 @@
+import { OrderLine } from './order-line';
+
 export class Order {
   constructor(
     readonly id: string,
-    readonly status: string,
+    public status: string,
+    public lines: OrderLine[],
+    public total: number,
   ) {}
 
   hasSameIdentityAs(other: Order): boolean {
