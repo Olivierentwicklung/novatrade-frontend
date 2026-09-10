@@ -90,4 +90,34 @@ describe('App', () => {
 
     expect(compiled.textContent).toContain('Submitted');
   });
+
+  it('should not place an order without products', async () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const removeMechanicalKeyboardButton = compiled.querySelector(
+      '[aria-label="Remove Mechanical Keyboard"]',
+    ) as HTMLButtonElement;
+
+    const removeWirelessMouseButton = compiled.querySelector(
+      '[aria-label="Remove Wireless Mouse"]',
+    ) as HTMLButtonElement;
+
+    removeMechanicalKeyboardButton.click();
+    fixture.detectChanges();
+
+    removeWirelessMouseButton.click();
+    fixture.detectChanges();
+
+    const placeOrderButton = compiled.querySelector(
+      '[aria-label="Place order"]',
+    ) as HTMLButtonElement;
+
+    placeOrderButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.textContent).toContain('Draft');
+  });
 });
