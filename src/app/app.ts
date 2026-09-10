@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { calculateOrderTotal } from './calculate-order-total';
 import { OrderLine } from './order-line';
+import { Order } from './order';
 
 @Component({
   selector: 'app-root',
@@ -8,15 +9,12 @@ import { OrderLine } from './order-line';
   styleUrl: './app.css',
 })
 export class App {
-  readonly order = {
-    id: 'ORD-1001',
-    status: 'Draft',
-    lines: [
-      new OrderLine('Mechanical Keyboard', 1, 129.99),
-      new OrderLine('Wireless Mouse', 2, 49.99),
-    ],
-    total: 229.97,
-  };
+  readonly order = new Order(
+    'ORD-1001',
+    'Draft',
+    [new OrderLine('Mechanical Keyboard', 1, 129.99), new OrderLine('Wireless Mouse', 2, 49.99)],
+    229.97,
+  );
 
   increaseProductQuantity(productName: string) {
     this.order.lines = this.order.lines.map((line) =>
