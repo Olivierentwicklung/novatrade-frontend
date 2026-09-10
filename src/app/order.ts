@@ -5,6 +5,6 @@ export class Order {
   ) {}
 
   hasSameIdentityAs(other: Order): boolean {
-    return false;
+    return this.id === other.id;
   }
 }
