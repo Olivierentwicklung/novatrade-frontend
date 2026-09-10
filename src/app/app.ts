@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { calculateOrderTotal } from './calculate-order-total';
 
 @Component({
   selector: 'app-root',
@@ -33,19 +34,13 @@ export class App {
 
     line.quantity += 1;
 
-    this.order.total = this.order.lines.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice,
-      0,
-    );
+    this.recalculateTotal();
   }
 
   removeProductFromOrder(productName: string) {
     this.order.lines = this.order.lines.filter((item) => item.productName !== productName);
 
-    this.order.total = this.order.lines.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice,
-      0,
-    );
+    this.recalculateTotal();
   }
 
   decreaseProductQuantity(productName: string) {
@@ -57,10 +52,7 @@ export class App {
 
     line.quantity -= 1;
 
-    this.order.total = this.order.lines.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice,
-      0,
-    );
+    this.recalculateTotal();
   }
 
   placeOrder() {
@@ -69,5 +61,9 @@ export class App {
     }
 
     this.order.status = 'Submitted';
+  }
+
+  private recalculateTotal() {
+    this.order.total = calculateOrderTotal(this.order.lines);
   }
 }
