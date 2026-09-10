@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { calculateOrderTotal } from './calculate-order-total';
+import { OrderLine } from './order-line';
 
 @Component({
   selector: 'app-root',
@@ -11,28 +12,18 @@ export class App {
     id: 'ORD-1001',
     status: 'Draft',
     lines: [
-      {
-        productName: 'Mechanical Keyboard',
-        quantity: 1,
-        unitPrice: 129.99,
-      },
-      {
-        productName: 'Wireless Mouse',
-        quantity: 2,
-        unitPrice: 49.99,
-      },
+      new OrderLine('Mechanical Keyboard', 1, 129.99),
+      new OrderLine('Wireless Mouse', 2, 49.99),
     ],
     total: 229.97,
   };
 
   increaseProductQuantity(productName: string) {
-    const line = this.order.lines.find((item) => item.productName === productName);
-
-    if (!line) {
-      return;
-    }
-
-    line.quantity += 1;
+    this.order.lines = this.order.lines.map((line) =>
+      line.productName === productName
+        ? new OrderLine(line.productName, line.quantity + 1, line.unitPrice)
+        : line,
+    );
 
     this.recalculateTotal();
   }
@@ -44,13 +35,13 @@ export class App {
   }
 
   decreaseProductQuantity(productName: string) {
-    const line = this.order.lines.find((item) => item.productName === productName);
+    this.order.lines = this.order.lines.map((line) => {
+      if (line.productName !== productName || line.quantity <= 1) {
+        return line;
+      }
 
-    if (!line || line.quantity <= 1) {
-      return;
-    }
-
-    line.quantity -= 1;
+      return new OrderLine(line.productName, line.quantity - 1, line.unitPrice);
+    });
 
     this.recalculateTotal();
   }

@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { OrderLine } from './order-line';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -125,13 +126,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
 
-    app.order.lines = [
-      {
-        productName: 'Test Product',
-        quantity: 3,
-        unitPrice: 20,
-      },
-    ];
+    app.order.lines = [new OrderLine('Test Product', 3, 20)];
 
     fixture.detectChanges();
 
