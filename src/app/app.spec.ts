@@ -27,7 +27,7 @@ describe('App', () => {
     expect(compiled.textContent).toContain('229.97');
   });
 
-  it('should update the total when a product quantity increases', async () => {
+  it('should increase a product quantity and update the total', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
@@ -61,7 +61,7 @@ describe('App', () => {
     expect(compiled.textContent).toContain('129.99');
   });
 
-  it('should not reduce a product quantity below one', async () => {
+  it('should not decrease a product quantity below one', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
