@@ -2,6 +2,10 @@ import { Order } from '../domain/order';
 import { OrderApi } from './ports/order-api';
 
 export async function placeOrder(order: Order, orderApi?: OrderApi): Promise<void> {
+  if (!order.canBePlaced()) {
+    return;
+  }
+
   if (orderApi) {
     await orderApi.placeOrder(order.id);
     order.place();
