@@ -59,4 +59,17 @@ describe('placeOrder', () => {
 
     expect(order.status).toBe('Draft');
   });
+
+  it('should not ask the backend to place an invalid order', async () => {
+    const order = new Order('ORD-1001', 'Draft', [], 0);
+
+    const orderApi = {
+      placeOrder: vi.fn().mockResolvedValue(undefined),
+    };
+
+    await placeOrder(order, orderApi);
+
+    expect(orderApi.placeOrder).not.toHaveBeenCalled();
+    expect(order.status).toBe('Draft');
+  });
 });
