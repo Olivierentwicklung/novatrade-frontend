@@ -12,5 +12,7 @@ export class Order {
     return this.id === other.id;
   }
 
-  place(): void {}
+  place(): void {
+    this.status = 'Submitted';
+  }
 }
