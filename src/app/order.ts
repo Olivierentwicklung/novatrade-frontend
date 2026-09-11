@@ -11,4 +11,12 @@ export class Order {
   hasSameIdentityAs(other: Order): boolean {
     return this.id === other.id;
   }
+
+  place(): void {
+    if (this.status !== 'Draft' || this.lines.length === 0) {
+      return;
+    }
+
+    this.status = 'Submitted';
+  }
 }

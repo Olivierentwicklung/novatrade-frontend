@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { calculateOrderTotal } from './calculate-order-total';
 import { OrderLine } from './order-line';
 import { Order } from './order';
+import { placeOrder } from './application/place-order';
 
 @Component({
   selector: 'app-root',
@@ -45,11 +46,7 @@ export class App {
   }
 
   placeOrder() {
-    if (this.order.status !== 'Draft' || this.order.lines.length === 0) {
-      return;
-    }
-
-    this.order.status = 'Submitted';
+    placeOrder(this.order);
   }
 
   private recalculateTotal() {
