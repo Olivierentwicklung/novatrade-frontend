@@ -13,6 +13,10 @@ export class Order {
   }
 
   place(): void {
+    if (this.lines.length === 0) {
+      return;
+    }
+
     this.status = 'Submitted';
   }
 }
