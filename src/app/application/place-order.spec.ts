@@ -33,4 +33,18 @@ describe('placeOrder', () => {
       method: 'POST',
     });
   });
+
+  it('should ask the order api to place the order', async () => {
+    const order = new Order('ORD-1001', 'Draft', [new OrderLine('Test Product', 1, 20)], 20);
+
+    const orderApi = {
+      placeOrder: vi.fn().mockResolvedValue(undefined),
+    };
+
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 204 })));
+
+    await placeOrder(order, orderApi);
+
+    expect(orderApi.placeOrder).toHaveBeenCalledWith('ORD-1001');
+  });
 });
