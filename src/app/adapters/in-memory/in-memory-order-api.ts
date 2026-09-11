@@ -1,4 +1,4 @@
-import { OrderApi } from '../application/ports/order-api';
+import { OrderApi } from '../../application/ports/order-api';
 
 export class InMemoryOrderApi implements OrderApi {
   readonly placedOrderIds: string[] = [];
