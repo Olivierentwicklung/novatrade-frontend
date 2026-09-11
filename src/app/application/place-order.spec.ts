@@ -8,12 +8,14 @@ describe('placeOrder', () => {
     vi.unstubAllGlobals();
   });
 
-  it('should ask the order to place itself', () => {
+  it('should ask the order to place itself', async () => {
     const order = new Order('ORD-1001', 'Draft', [new OrderLine('Test Product', 1, 20)], 20);
 
     const placeSpy = vi.spyOn(order, 'place');
 
-    placeOrder(order);
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 204 })));
+
+    await placeOrder(order);
 
     expect(placeSpy).toHaveBeenCalledOnce();
   });
