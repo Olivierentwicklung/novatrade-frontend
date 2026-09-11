@@ -1,5 +1,5 @@
 import { Order } from '../order';
-import { OrderApi } from './order-api';
+import { OrderApi } from './ports/order-api';
 
 export async function placeOrder(order: Order, orderApi?: OrderApi): Promise<void> {
   order.place();
