@@ -11,4 +11,6 @@ export class Order {
   hasSameIdentityAs(other: Order): boolean {
     return this.id === other.id;
   }
+
+  place(): void {}
 }
