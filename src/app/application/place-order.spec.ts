@@ -1,6 +1,6 @@
 import { afterEach, vi } from 'vitest';
-import { Order } from '../order';
-import { OrderLine } from '../order-line';
+import { Order } from '../domain/order';
+import { OrderLine } from '../domain/order-line';
 import { placeOrder } from './place-order';
 
 describe('placeOrder', () => {
