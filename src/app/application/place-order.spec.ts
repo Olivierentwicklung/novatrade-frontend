@@ -47,4 +47,16 @@ describe('placeOrder', () => {
 
     expect(orderApi.placeOrder).toHaveBeenCalledWith('ORD-1001');
   });
+
+  it('should keep the order draft when the backend rejects placement', async () => {
+    const order = new Order('ORD-1001', 'Draft', [new OrderLine('Test Product', 1, 20)], 20);
+
+    const orderApi = {
+      placeOrder: vi.fn().mockRejectedValue(new Error('Order placement rejected')),
+    };
+
+    await expect(placeOrder(order, orderApi)).rejects.toThrow('Order placement rejected');
+
+    expect(order.status).toBe('Draft');
+  });
 });
