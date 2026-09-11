@@ -13,7 +13,7 @@ export class Order {
   }
 
   place(): void {
-    if (this.lines.length === 0) {
+    if (this.status !== 'Draft' || this.lines.length === 0) {
       return;
     }
 
