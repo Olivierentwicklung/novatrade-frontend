@@ -1,12 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { OrderLine } from './order-line';
+import { afterEach, vi } from 'vitest';
 
 describe('App', () => {
   beforeEach(async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 204 })));
+
     await TestBed.configureTestingModule({
       imports: [App],
     }).compileComponents();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it('should create the app', () => {
