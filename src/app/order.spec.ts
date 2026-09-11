@@ -24,4 +24,12 @@ describe('Order', () => {
 
     expect(order.status).toBe('Draft');
   });
+
+  it('should not place an order that is not draft', () => {
+    const order = new Order('ORD-1001', 'Cancelled', [new OrderLine('Test Product', 1, 20)], 20);
+
+    order.place();
+
+    expect(order.status).toBe('Cancelled');
+  });
 });
