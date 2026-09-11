@@ -16,4 +16,12 @@ describe('Order', () => {
 
     expect(order.status).toBe('Submitted');
   });
+
+  it('should not place an order without products', () => {
+    const order = new Order('ORD-1001', 'Draft', [], 0);
+
+    order.place();
+
+    expect(order.status).toBe('Draft');
+  });
 });
