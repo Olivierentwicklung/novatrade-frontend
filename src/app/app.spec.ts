@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
-import { OrderLine } from './order-line';
+import { OrderLine } from './domain/order-line';
 import { afterEach, vi } from 'vitest';
 
 describe('App', () => {

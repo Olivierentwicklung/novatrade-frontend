@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { calculateOrderTotal } from './calculate-order-total';
-import { OrderLine } from './order-line';
-import { Order } from './order';
+import { calculateOrderTotal } from './domain/calculate-order-total';
+import { OrderLine } from './domain/order-line';
+import { Order } from './domain/order';
 import { placeOrder } from './application/place-order';
 
 @Component({

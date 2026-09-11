@@ -12,8 +12,12 @@ export class Order {
     return this.id === other.id;
   }
 
+  canBePlaced(): boolean {
+    return this.status === 'Draft' && this.lines.length > 0;
+  }
+
   place(): void {
-    if (this.status !== 'Draft' || this.lines.length === 0) {
+    if (!this.canBePlaced()) {
       return;
     }
 
