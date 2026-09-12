@@ -4,9 +4,9 @@
 
 NovaTrade can now retrieve a Domain `Order` through the Application layer.
 
-Once the Order entered the frontend, the UI needed somewhere to keep the current object so that it could display and manipulate it.
+Once the Order enters the frontend, the UI needs somewhere to keep the current object so that it can display and manipulate it.
 
-This introduced a state-ownership question.
+This introduces a state-ownership question.
 
 ## Pressure
 
@@ -23,7 +23,7 @@ The `App` component owns the current Order state.
 The state is represented as:
 
 ```ts
-Signal<Order | null>
+Signal<Order | null>;
 ```
 
 where:
@@ -59,10 +59,10 @@ The absence of an Order before loading is represented explicitly instead of bein
 
 This decision does not establish how state should be owned when:
 
-* multiple components need the same Order,
-* state must survive component destruction,
-* several routes share the same Order,
-* server updates must be reconciled with local state,
-* caching or synchronization becomes necessary.
+- multiple components need the same Order,
+- state must survive component destruction,
+- several routes share the same Order,
+- server updates must be reconciled with local state,
+- caching or synchronization becomes necessary.
 
 Those pressures must be demonstrated before ownership is moved outward.
