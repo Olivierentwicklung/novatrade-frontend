@@ -1,5 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { By } from '@angular/platform-browser';
+import { Order } from './domain/order';
+import { OrderLine } from './domain/order-line';
+import { OrderEditor } from './order-editor/order-editor';
 
 describe('App', () => {
   it('should create the app', () => {
@@ -30,5 +34,31 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(compiled.querySelector('app-order-editor')).toBeTruthy();
+  });
+
+  it('should preserve the edited order when returning from review', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    let editor = fixture.debugElement.query(By.directive(OrderEditor))
+      .componentInstance as OrderEditor;
+
+    editor.order.set(
+      new Order('ORD-1001', 'Draft', [new OrderLine('Wireless Mouse', 2, 49.99)], 99.98),
+    );
+
+    editor.increaseProductQuantity('Wireless Mouse');
+
+    expect(editor.order()?.lines[0].quantity).toBe(3);
+
+    fixture.componentInstance.reviewOrder();
+    fixture.detectChanges();
+
+    fixture.componentInstance.editOrder();
+    fixture.detectChanges();
+
+    editor = fixture.debugElement.query(By.directive(OrderEditor)).componentInstance as OrderEditor;
+
+    expect(editor.order()?.lines[0].quantity).toBe(3);
   });
 });
