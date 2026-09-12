@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, OnInit, output } from '@angular/core';
 import { loadOrder } from '../application/load-order';
 import { placeOrder } from '../application/place-order';
 import { RestOrderApi } from '../adapters/rest/rest-order-api';
@@ -11,7 +11,7 @@ import { OrderLine } from '../domain/order-line';
   templateUrl: './order-editor.html',
   styleUrl: './order-editor.css',
 })
-export class OrderEditor {
+export class OrderEditor implements OnInit {
   readonly order = input<Order | null>(null);
   readonly orderChange = output<Order | null>();
   private readonly orderApi = new RestOrderApi(fetch);
@@ -25,6 +25,10 @@ export class OrderEditor {
 
     return calculateOrderTotal(order.lines);
   });
+
+  async ngOnInit() {
+    await this.loadOrder();
+  }
 
   increaseProductQuantity(productName: string) {
     const order = this.order();
@@ -87,14 +91,16 @@ export class OrderEditor {
     );
   }
 
-  placeOrder() {
+  async placeOrder() {
     const order = this.order();
 
     if (!order) {
       return;
     }
 
-    placeOrder(order, this.orderApi);
+    await placeOrder(order, this.orderApi);
+
+    this.orderChange.emit(new Order(order.id, order.status, order.lines, order.total));
   }
 
   async loadOrder() {
