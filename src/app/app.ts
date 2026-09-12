@@ -22,7 +22,7 @@ export class App {
   private readonly orderApi = new RestOrderApi(fetch);
 
   reviewOrder() {
-    if (!this.checkoutEmail().trim() || !this.deliveryAddress().trim()) {
+    if (!this.hasValidCheckoutDetails()) {
       return;
     }
 
@@ -45,5 +45,12 @@ export class App {
     const authoritativeOrder = await loadOrder(order.id, this.orderApi);
 
     this.order.set(authoritativeOrder);
+  }
+
+  private hasValidCheckoutDetails(): boolean {
+    const email = this.checkoutEmail().trim();
+    const address = this.deliveryAddress().trim();
+
+    return email.length > 0 && address.length > 0 && email.includes('@');
   }
 }
