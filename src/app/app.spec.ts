@@ -94,6 +94,8 @@ describe('App', () => {
     const submitButton = compiled.querySelector('[aria-label="Place order"]') as HTMLButtonElement;
 
     submitButton.click();
+
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(compiled.textContent).toContain('Submitted');
