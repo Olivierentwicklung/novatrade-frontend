@@ -1,5 +1,9 @@
 @if (step() === 'edit') {
-  <app-order-editor [order]="order()" (orderChange)="order.set($event)" />
+  <app-order-editor
+    [order]="order()"
+    (orderChange)="order.set($event)"
+    (placeRequested)="placeCurrentOrder()"
+  />
 
   <button type="button" aria-label="Review order" (click)="reviewOrder()">Review order</button>
 } @else {

@@ -2,6 +2,9 @@ import { Component, signal } from '@angular/core';
 import { OrderEditor } from './order-editor/order-editor';
 import { OrderReview } from './order-review/order-review';
 import { Order } from './domain/order';
+import { RestOrderApi } from './adapters/rest/rest-order-api';
+import { placeOrder } from './application/place-order';
+import { loadOrder } from './application/load-order';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +16,27 @@ export class App {
   readonly step = signal<'edit' | 'review'>('edit');
   readonly order = signal<Order | null>(null);
 
+  private readonly orderApi = new RestOrderApi(fetch);
+
   reviewOrder() {
     this.step.set('review');
   }
 
   editOrder() {
     this.step.set('edit');
+  }
+
+  async placeCurrentOrder() {
+    const order = this.order();
+
+    if (!order) {
+      return;
+    }
+
+    await placeOrder(order, this.orderApi);
+
+    const authoritativeOrder = await loadOrder(order.id, this.orderApi);
+
+    this.order.set(authoritativeOrder);
   }
 }

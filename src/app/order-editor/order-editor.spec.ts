@@ -109,10 +109,14 @@ describe('Order Editor', () => {
     expect(compiled.textContent).toContain('Quantity: 1');
   });
 
-  it('should place a draft order', async () => {
+  it('should request order placement', () => {
     const fixture = TestBed.createComponent(OrderEditor);
 
-    connectOrder(fixture, createTestOrder());
+    setTestOrder(fixture);
+
+    const placeRequested = vi.fn();
+
+    fixture.componentInstance.placeRequested.subscribe(placeRequested);
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -120,10 +124,7 @@ describe('Order Editor', () => {
 
     submitButton.click();
 
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    expect(compiled.textContent).toContain('Submitted');
+    expect(placeRequested).toHaveBeenCalledOnce();
   });
 
   it('should not place an order without products', () => {
@@ -188,44 +189,13 @@ describe('Order Editor', () => {
     expect(decreaseButton.disabled).toBe(true);
   });
 
-  it('should display the order loaded through the application', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        json: vi.fn().mockResolvedValue({
-          id: 'ORD-2002',
-          status: 'Draft',
-          lines: [
-            {
-              product_name: 'USB-C Dock',
-              quantity: 1,
-              unit_price: 89.99,
-            },
-          ],
-          total: 89.99,
-        }),
-      }),
-    );
-
+  it('should display an order provided by its owner', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    orderEditor.orderChange.subscribe((order) => {
-      setOrder(fixture, order);
-    });
-
-    await orderEditor.loadOrder();
-
-    const order = orderEditor.order();
-
-    if (!order) {
-      throw new Error('Expected order to be loaded');
-    }
-
-    expect(order.id).toBe('ORD-2002');
-    expect(order.lines[0].productName).toBe('USB-C Dock');
-
-    fixture.detectChanges();
+    setOrder(
+      fixture,
+      new Order('ORD-2002', 'Draft', [new OrderLine('USB-C Dock', 1, 89.99)], 89.99),
+    );
 
     const compiled = fixture.nativeElement as HTMLElement;
 
