@@ -12,18 +12,15 @@ import { loadOrder } from './application/load-order';
   styleUrl: './app.css',
 })
 export class App {
-  readonly order = signal(
-    new Order(
-      'ORD-1001',
-      'Draft',
-      [new OrderLine('Mechanical Keyboard', 1, 129.99), new OrderLine('Wireless Mouse', 2, 49.99)],
-      229.97,
-    ),
-  );
+  readonly order = signal<Order | null>(null);
   private readonly orderApi = new RestOrderApi(fetch);
 
   increaseProductQuantity(productName: string) {
     const order = this.order();
+
+    if (!order) {
+      return;
+    }
 
     order.lines = order.lines.map((line) =>
       line.productName === productName
@@ -36,6 +33,10 @@ export class App {
 
   removeProductFromOrder(productName: string) {
     const order = this.order();
+
+    if (!order) {
+      return;
+    }
     order.lines = order.lines.filter((item) => item.productName !== productName);
 
     this.recalculateTotal();
@@ -43,6 +44,10 @@ export class App {
 
   decreaseProductQuantity(productName: string) {
     const order = this.order();
+
+    if (!order) {
+      return;
+    }
     order.lines = order.lines.map((line) => {
       if (line.productName !== productName || line.quantity <= 1) {
         return line;
@@ -55,7 +60,13 @@ export class App {
   }
 
   placeOrder() {
-    placeOrder(this.order(), this.orderApi);
+    const order = this.order();
+
+    if (!order) {
+      return;
+    }
+
+    placeOrder(order, this.orderApi);
   }
 
   async loadOrder() {
@@ -66,6 +77,11 @@ export class App {
 
   private recalculateTotal() {
     const order = this.order();
+
+    if (!order) {
+      return;
+    }
+
     order.total = calculateOrderTotal(order.lines);
   }
 }

@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { OrderLine } from './domain/order-line';
 import { afterEach, vi } from 'vitest';
+import { Order } from './domain/order';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -16,6 +17,20 @@ describe('App', () => {
     vi.unstubAllGlobals();
   });
 
+  function setTestOrder(app: App) {
+    app.order.set(
+      new Order(
+        'ORD-1001',
+        'Draft',
+        [
+          new OrderLine('Mechanical Keyboard', 1, 129.99),
+          new OrderLine('Wireless Mouse', 2, 49.99),
+        ],
+        229.97,
+      ),
+    );
+  }
+
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
@@ -24,7 +39,11 @@ describe('App', () => {
 
   it('should display the order', async () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
+    const app = fixture.componentInstance;
+
+    setTestOrder(app);
+
+    fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -37,6 +56,10 @@ describe('App', () => {
 
   it('should increase a product quantity and update the total', async () => {
     const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    setTestOrder(app);
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -54,6 +77,10 @@ describe('App', () => {
 
   it('should remove a product from the order and update the total', async () => {
     const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    setTestOrder(app);
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -71,6 +98,10 @@ describe('App', () => {
 
   it('should not decrease a product quantity below one', async () => {
     const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    setTestOrder(app);
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -87,6 +118,10 @@ describe('App', () => {
 
   it('should place a draft order', async () => {
     const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    setTestOrder(app);
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -103,8 +138,11 @@ describe('App', () => {
 
   it('should not place an order without products', async () => {
     const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    const app = fixture.componentInstance;
 
+    setTestOrder(app);
+
+    fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
 
     const removeMechanicalKeyboardButton = compiled.querySelector(
@@ -135,7 +173,11 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
 
-    app.order().lines = [new OrderLine('Test Product', 3, 20)];
+    setTestOrder(app);
+
+    fixture.detectChanges();
+
+    app.order.set(new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 3, 20)], 60));
 
     fixture.detectChanges();
 
@@ -155,7 +197,11 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
 
-    app.order().lines = [new OrderLine('Test Product', 1, 20)];
+    setTestOrder(app);
+
+    fixture.detectChanges();
+
+    app.order.set(new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 1, 20)], 20));
 
     fixture.detectChanges();
 
@@ -194,8 +240,14 @@ describe('App', () => {
     await component.loadOrder();
 
     expect(fetchMock).toHaveBeenCalledWith('/api/orders/ORD-1001/');
-    expect(component.order().id).toBe('ORD-2002');
-    expect(component.order().lines[0].productName).toBe('USB-C Dock');
+    const order = component.order();
+
+    if (!order) {
+      throw new Error('Expected order to be loaded');
+    }
+
+    expect(order.id).toBe('ORD-2002');
+    expect(order.lines[0].productName).toBe('USB-C Dock');
 
     fixture.detectChanges();
 
@@ -215,5 +267,15 @@ describe('App', () => {
 
     expect(compiled.textContent).not.toContain('ORD-1001');
     expect(compiled.textContent).not.toContain('Mechanical Keyboard');
+  });
+
+  it('should show a loading message before the order has been loaded', () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('Loading order...');
   });
 });
