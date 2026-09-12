@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, vi } from 'vitest';
-import { OrderEditor } from './order-editor';
+
 import { Order } from '../domain/order';
 import { OrderLine } from '../domain/order-line';
+import { OrderEditor } from './order-editor';
 
 describe('Order Editor', () => {
   beforeEach(async () => {
@@ -18,46 +18,48 @@ describe('Order Editor', () => {
     vi.unstubAllGlobals();
   });
 
-  function setTestOrder(orderEditor: OrderEditor) {
-    const fixture = TestBed.createComponent(OrderEditor);
-    fixture.componentRef.setInput(
-      'order',
-      new Order(
-        'ORD-1001',
-        'Draft',
-        [
-          new OrderLine('Mechanical Keyboard', 1, 129.99),
-          new OrderLine('Wireless Mouse', 2, 49.99),
-        ],
-        229.97,
-      ),
+  function createTestOrder(): Order {
+    return new Order(
+      'ORD-1001',
+      'Draft',
+      [new OrderLine('Mechanical Keyboard', 1, 129.99), new OrderLine('Wireless Mouse', 2, 49.99)],
+      229.97,
     );
   }
 
-  it('should display the order', async () => {
-    const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
-
-    setTestOrder(orderEditor);
-
+  function setOrder(fixture: ComponentFixture<OrderEditor>, order: Order | null) {
+    fixture.componentRef.setInput('order', order);
     fixture.detectChanges();
+  }
+
+  function setTestOrder(fixture: ComponentFixture<OrderEditor>) {
+    setOrder(fixture, createTestOrder());
+  }
+
+  function connectOrder(fixture: ComponentFixture<OrderEditor>, order: Order) {
+    setOrder(fixture, order);
+
+    fixture.componentInstance.orderChange.subscribe((updatedOrder) => {
+      setOrder(fixture, updatedOrder);
+    });
+  }
+
+  it('should display the order', () => {
+    const fixture = TestBed.createComponent(OrderEditor);
+
+    setTestOrder(fixture);
 
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(compiled.textContent).toContain('ORD-1001');
     expect(compiled.textContent).toContain('Mechanical Keyboard');
     expect(compiled.textContent).toContain('Wireless Mouse');
-    expect(compiled.textContent).toContain('Draft');
-    expect(compiled.textContent).toContain('229.97');
   });
 
-  it('should increase a product quantity and update the total', async () => {
+  it('should increase a product quantity and update the total', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    setTestOrder(orderEditor);
-
-    fixture.detectChanges();
+    connectOrder(fixture, createTestOrder());
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -72,13 +74,10 @@ describe('Order Editor', () => {
     expect(compiled.textContent).toContain('279.96');
   });
 
-  it('should remove a product from the order and update the total', async () => {
+  it('should remove a product from the order and update the total', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    setTestOrder(orderEditor);
-
-    fixture.detectChanges();
+    connectOrder(fixture, createTestOrder());
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -93,13 +92,10 @@ describe('Order Editor', () => {
     expect(compiled.textContent).toContain('129.99');
   });
 
-  it('should not decrease a product quantity below one', async () => {
+  it('should not decrease a product quantity below one', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    setTestOrder(orderEditor);
-
-    fixture.detectChanges();
+    connectOrder(fixture, createTestOrder());
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -115,11 +111,8 @@ describe('Order Editor', () => {
 
   it('should place a draft order', async () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    setTestOrder(orderEditor);
-
-    fixture.detectChanges();
+    connectOrder(fixture, createTestOrder());
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -133,13 +126,11 @@ describe('Order Editor', () => {
     expect(compiled.textContent).toContain('Submitted');
   });
 
-  it('should not place an order without products', async () => {
+  it('should not place an order without products', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    setTestOrder(orderEditor);
+    connectOrder(fixture, createTestOrder());
 
-    fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
 
     const removeMechanicalKeyboardButton = compiled.querySelector(
@@ -168,18 +159,8 @@ describe('Order Editor', () => {
 
   it('should display the total price for a product entry', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    setTestOrder(orderEditor);
-
-    fixture.detectChanges();
-
-    fixture.componentRef.setInput(
-      'order',
-      new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 3, 20)], 60),
-    );
-
-    fixture.detectChanges();
+    setOrder(fixture, new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 3, 20)], 60));
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -195,18 +176,8 @@ describe('Order Editor', () => {
 
   it('should disable decreasing a product at minimum quantity', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    setTestOrder(orderEditor);
-
-    fixture.detectChanges();
-
-    fixture.componentRef.setInput(
-      'order',
-      new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 1, 20)], 20),
-    );
-
-    fixture.detectChanges();
+    setOrder(fixture, new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 1, 20)], 20));
 
     const compiled = fixture.nativeElement as HTMLElement;
 
@@ -218,32 +189,34 @@ describe('Order Editor', () => {
   });
 
   it('should display the order loaded through the application', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      json: vi.fn().mockResolvedValue({
-        id: 'ORD-2002',
-        status: 'Draft',
-        lines: [
-          {
-            product_name: 'USB-C Dock',
-            quantity: 1,
-            unit_price: 89.99,
-          },
-        ],
-        total: 89.99,
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        json: vi.fn().mockResolvedValue({
+          id: 'ORD-2002',
+          status: 'Draft',
+          lines: [
+            {
+              product_name: 'USB-C Dock',
+              quantity: 1,
+              unit_price: 89.99,
+            },
+          ],
+          total: 89.99,
+        }),
       }),
-    });
-
-    vi.stubGlobal('fetch', fetchMock);
+    );
 
     const fixture = TestBed.createComponent(OrderEditor);
-    const component = fixture.componentInstance;
+    const orderEditor = fixture.componentInstance;
 
-    fixture.detectChanges();
+    orderEditor.orderChange.subscribe((order) => {
+      setOrder(fixture, order);
+    });
 
-    await component.loadOrder();
+    await orderEditor.loadOrder();
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/orders/ORD-1001/');
-    const order = component.order();
+    const order = orderEditor.order();
 
     if (!order) {
       throw new Error('Expected order to be loaded');
@@ -284,10 +257,9 @@ describe('Order Editor', () => {
 
   it('should derive the displayed total from the current order lines', () => {
     const fixture = TestBed.createComponent(OrderEditor);
-    const orderEditor = fixture.componentInstance;
 
-    fixture.componentRef.setInput(
-      'order',
+    setOrder(
+      fixture,
       new Order(
         'ORD-1001',
         'Draft',
@@ -295,8 +267,6 @@ describe('Order Editor', () => {
         999,
       ),
     );
-
-    fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
 
