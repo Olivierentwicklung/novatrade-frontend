@@ -3,6 +3,7 @@ import { calculateOrderTotal } from './domain/calculate-order-total';
 import { OrderLine } from './domain/order-line';
 import { Order } from './domain/order';
 import { placeOrder } from './application/place-order';
+import { RestOrderApi } from './adapters/rest/rest-order-api';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class App {
     [new OrderLine('Mechanical Keyboard', 1, 129.99), new OrderLine('Wireless Mouse', 2, 49.99)],
     229.97,
   );
+  private readonly orderApi = new RestOrderApi(fetch);
 
   increaseProductQuantity(productName: string) {
     this.order.lines = this.order.lines.map((line) =>
@@ -46,7 +48,7 @@ export class App {
   }
 
   placeOrder() {
-    placeOrder(this.order);
+    placeOrder(this.order, this.orderApi);
   }
 
   private recalculateTotal() {

@@ -1,20 +1,12 @@
 import { Order } from '../domain/order';
 import { OrderApi } from './ports/order-api';
 
-export async function placeOrder(order: Order, orderApi?: OrderApi): Promise<void> {
+export async function placeOrder(order: Order, orderApi: OrderApi): Promise<void> {
   if (!order.canBePlaced()) {
     return;
   }
 
-  if (orderApi) {
-    await orderApi.placeOrder(order.id);
-    order.place();
-    return;
-  }
+  await orderApi.placeOrder(order.id);
 
   order.place();
-
-  await fetch(`/api/orders/${order.id}/place/`, {
-    method: 'POST',
-  });
 }
