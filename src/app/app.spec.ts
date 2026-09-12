@@ -278,4 +278,24 @@ describe('App', () => {
 
     expect(compiled.textContent).toContain('Loading order...');
   });
+
+  it('should derive the displayed total from the current order lines', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    app.order.set(
+      new Order(
+        'ORD-1001',
+        'Draft',
+        [new OrderLine('Mechanical Keyboard', 1, 100), new OrderLine('Wireless Mouse', 2, 25)],
+        999,
+      ),
+    );
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('Total: 150');
+  });
 });
