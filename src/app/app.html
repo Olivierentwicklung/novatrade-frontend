@@ -1,1 +1,9 @@
-<app-order-editor />
+@if (step() === 'edit') {
+  <app-order-editor />
+
+  <button type="button" aria-label="Review order" (click)="reviewOrder()">Review order</button>
+} @else {
+  <app-order-review />
+
+  <button type="button" aria-label="Edit order" (click)="editOrder()">Edit order</button>
+}
