@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { calculateOrderTotal } from './domain/calculate-order-total';
 import { OrderLine } from './domain/order-line';
 import { Order } from './domain/order';
@@ -15,48 +15,69 @@ export class App {
   readonly order = signal<Order | null>(null);
   private readonly orderApi = new RestOrderApi(fetch);
 
-  increaseProductQuantity(productName: string) {
+  readonly total = computed(() => {
     const order = this.order();
 
     if (!order) {
-      return;
+      return 0;
     }
 
-    order.lines = order.lines.map((line) =>
-      line.productName === productName
-        ? new OrderLine(line.productName, line.quantity + 1, line.unitPrice)
-        : line,
-    );
+    return calculateOrderTotal(order.lines);
+  });
 
-    this.recalculateTotal();
+  increaseProductQuantity(productName: string) {
+    this.order.update((order) => {
+      if (!order) {
+        return order;
+      }
+
+      return new Order(
+        order.id,
+        order.status,
+        order.lines.map((line) =>
+          line.productName === productName
+            ? new OrderLine(line.productName, line.quantity + 1, line.unitPrice)
+            : line,
+        ),
+        order.total,
+      );
+    });
   }
 
   removeProductFromOrder(productName: string) {
-    const order = this.order();
+    this.order.update((order) => {
+      if (!order) {
+        return order;
+      }
 
-    if (!order) {
-      return;
-    }
-    order.lines = order.lines.filter((item) => item.productName !== productName);
-
-    this.recalculateTotal();
+      return new Order(
+        order.id,
+        order.status,
+        order.lines.filter((line) => line.productName !== productName),
+        order.total,
+      );
+    });
   }
 
   decreaseProductQuantity(productName: string) {
-    const order = this.order();
-
-    if (!order) {
-      return;
-    }
-    order.lines = order.lines.map((line) => {
-      if (line.productName !== productName || line.quantity <= 1) {
-        return line;
+    this.order.update((order) => {
+      if (!order) {
+        return order;
       }
 
-      return new OrderLine(line.productName, line.quantity - 1, line.unitPrice);
-    });
+      return new Order(
+        order.id,
+        order.status,
+        order.lines.map((line) => {
+          if (line.productName !== productName || line.quantity <= 1) {
+            return line;
+          }
 
-    this.recalculateTotal();
+          return new OrderLine(line.productName, line.quantity - 1, line.unitPrice);
+        }),
+        order.total,
+      );
+    });
   }
 
   placeOrder() {
@@ -73,15 +94,5 @@ export class App {
     const order = await loadOrder('ORD-1001', this.orderApi);
 
     this.order.set(order);
-  }
-
-  private recalculateTotal() {
-    const order = this.order();
-
-    if (!order) {
-      return;
-    }
-
-    order.total = calculateOrderTotal(order.lines);
   }
 }
