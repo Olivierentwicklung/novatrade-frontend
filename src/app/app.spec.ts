@@ -18,6 +18,8 @@ describe('App', () => {
 
   it('should move from editing an order to reviewing it and back', () => {
     const fixture = TestBed.createComponent(App);
+    fixture.componentInstance.checkoutEmail.set('customer@example.com');
+    fixture.componentInstance.deliveryAddress.set('Example Street 10');
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;

@@ -16,9 +16,16 @@ export class App {
   readonly step = signal<'edit' | 'review'>('edit');
   readonly order = signal<Order | null>(null);
 
+  readonly checkoutEmail = signal('');
+  readonly deliveryAddress = signal('');
+
   private readonly orderApi = new RestOrderApi(fetch);
 
   reviewOrder() {
+    if (!this.checkoutEmail().trim() || !this.deliveryAddress().trim()) {
+      return;
+    }
+
     this.step.set('review');
   }
 
