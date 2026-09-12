@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { calculateOrderTotal } from './domain/calculate-order-total';
 import { OrderLine } from './domain/order-line';
 import { Order } from './domain/order';
 import { placeOrder } from './application/place-order';
 import { RestOrderApi } from './adapters/rest/rest-order-api';
+import { loadOrder } from './application/load-order';
 
 @Component({
   selector: 'app-root',
@@ -11,16 +12,20 @@ import { RestOrderApi } from './adapters/rest/rest-order-api';
   styleUrl: './app.css',
 })
 export class App {
-  readonly order = new Order(
-    'ORD-1001',
-    'Draft',
-    [new OrderLine('Mechanical Keyboard', 1, 129.99), new OrderLine('Wireless Mouse', 2, 49.99)],
-    229.97,
+  readonly order = signal(
+    new Order(
+      'ORD-1001',
+      'Draft',
+      [new OrderLine('Mechanical Keyboard', 1, 129.99), new OrderLine('Wireless Mouse', 2, 49.99)],
+      229.97,
+    ),
   );
   private readonly orderApi = new RestOrderApi(fetch);
 
   increaseProductQuantity(productName: string) {
-    this.order.lines = this.order.lines.map((line) =>
+    const order = this.order();
+
+    order.lines = order.lines.map((line) =>
       line.productName === productName
         ? new OrderLine(line.productName, line.quantity + 1, line.unitPrice)
         : line,
@@ -30,13 +35,15 @@ export class App {
   }
 
   removeProductFromOrder(productName: string) {
-    this.order.lines = this.order.lines.filter((item) => item.productName !== productName);
+    const order = this.order();
+    order.lines = order.lines.filter((item) => item.productName !== productName);
 
     this.recalculateTotal();
   }
 
   decreaseProductQuantity(productName: string) {
-    this.order.lines = this.order.lines.map((line) => {
+    const order = this.order();
+    order.lines = order.lines.map((line) => {
       if (line.productName !== productName || line.quantity <= 1) {
         return line;
       }
@@ -48,10 +55,17 @@ export class App {
   }
 
   placeOrder() {
-    placeOrder(this.order, this.orderApi);
+    placeOrder(this.order(), this.orderApi);
+  }
+
+  async loadOrder() {
+    const order = await loadOrder('ORD-1001', this.orderApi);
+
+    this.order.set(order);
   }
 
   private recalculateTotal() {
-    this.order.total = calculateOrderTotal(this.order.lines);
+    const order = this.order();
+    order.total = calculateOrderTotal(order.lines);
   }
 }

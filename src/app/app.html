@@ -1,13 +1,13 @@
 <main class="mx-auto max-w-3xl p-8">
-  <h1 class="text-3xl font-bold">Order {{ order.id }}</h1>
+  <h1 class="text-3xl font-bold">Order {{ order().id }}</h1>
 
   <p class="mt-2">
     Status:
-    <span class="font-medium">{{ order.status }}</span>
+    <span class="font-medium">{{ order().status }}</span>
   </p>
 
   <section class="mt-8">
-    @for (line of order.lines; track line.productName) {
+    @for (line of order().lines; track line.productName) {
       <article class="border-b py-4">
         <h2 class="font-semibold">{{ line.productName }}</h2>
         <p>Quantity: {{ line.quantity }}</p>
@@ -45,7 +45,7 @@
     }
   </section>
 
-  <p class="mt-8 text-xl font-semibold">Total: {{ order.total }}</p>
+  <p class="mt-8 text-xl font-semibold">Total: {{ order().total }}</p>
 
   <button
     type="button"

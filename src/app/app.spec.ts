@@ -135,7 +135,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
 
-    app.order.lines = [new OrderLine('Test Product', 3, 20)];
+    app.order().lines = [new OrderLine('Test Product', 3, 20)];
 
     fixture.detectChanges();
 
@@ -155,7 +155,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
 
-    app.order.lines = [new OrderLine('Test Product', 1, 20)];
+    app.order().lines = [new OrderLine('Test Product', 1, 20)];
 
     fixture.detectChanges();
 
@@ -169,29 +169,34 @@ describe('App', () => {
   });
 
   it('should display the order loaded through the application', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        json: vi.fn().mockResolvedValue({
-          id: 'ORD-2002',
-          status: 'Draft',
-          lines: [
-            {
-              product_name: 'USB-C Dock',
-              quantity: 1,
-              unit_price: 89.99,
-            },
-          ],
-          total: 89.99,
-        }),
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: vi.fn().mockResolvedValue({
+        id: 'ORD-2002',
+        status: 'Draft',
+        lines: [
+          {
+            product_name: 'USB-C Dock',
+            quantity: 1,
+            unit_price: 89.99,
+          },
+        ],
+        total: 89.99,
       }),
-    );
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
 
     const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
 
     fixture.detectChanges();
 
-    await fixture.whenStable();
+    await component.loadOrder();
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/orders/ORD-1001/');
+    expect(component.order().id).toBe('ORD-2002');
+    expect(component.order().lines[0].productName).toBe('USB-C Dock');
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
