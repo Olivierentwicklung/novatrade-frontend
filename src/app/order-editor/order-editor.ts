@@ -27,7 +27,7 @@ export class OrderEditor implements OnInit {
   });
 
   async ngOnInit() {
-    await this.loadOrder();
+    // await this.loadOrder();
   }
 
   increaseProductQuantity(productName: string) {
