@@ -126,4 +126,19 @@ describe('App', () => {
 
     expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/orders/ORD-1001/');
   });
+
+  it('should not continue to review without required checkout details', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const reviewButton = compiled.querySelector('[aria-label="Review order"]') as HTMLButtonElement;
+
+    reviewButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-order-editor')).toBeTruthy();
+    expect(compiled.querySelector('app-order-review')).toBeNull();
+  });
 });
