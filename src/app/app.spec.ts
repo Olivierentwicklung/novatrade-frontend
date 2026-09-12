@@ -38,18 +38,20 @@ describe('App', () => {
 
   it('should preserve the edited order when returning from review', () => {
     const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.order.set(
+      new Order('ORD-1001', 'Draft', [new OrderLine('Wireless Mouse', 2, 49.99)], 99.98),
+    );
+
     fixture.detectChanges();
 
     let editor = fixture.debugElement.query(By.directive(OrderEditor))
       .componentInstance as OrderEditor;
 
-    editor.order.set(
-      new Order('ORD-1001', 'Draft', [new OrderLine('Wireless Mouse', 2, 49.99)], 99.98),
-    );
-
     editor.increaseProductQuantity('Wireless Mouse');
+    fixture.detectChanges();
 
-    expect(editor.order()?.lines[0].quantity).toBe(3);
+    expect(fixture.componentInstance.order()?.lines[0].quantity).toBe(3);
 
     fixture.componentInstance.reviewOrder();
     fixture.detectChanges();

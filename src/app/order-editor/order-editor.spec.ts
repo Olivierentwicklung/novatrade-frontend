@@ -19,7 +19,9 @@ describe('Order Editor', () => {
   });
 
   function setTestOrder(orderEditor: OrderEditor) {
-    orderEditor.order.set(
+    const fixture = TestBed.createComponent(OrderEditor);
+    fixture.componentRef.setInput(
+      'order',
       new Order(
         'ORD-1001',
         'Draft',
@@ -172,7 +174,8 @@ describe('Order Editor', () => {
 
     fixture.detectChanges();
 
-    orderEditor.order.set(
+    fixture.componentRef.setInput(
+      'order',
       new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 3, 20)], 60),
     );
 
@@ -198,7 +201,8 @@ describe('Order Editor', () => {
 
     fixture.detectChanges();
 
-    orderEditor.order.set(
+    fixture.componentRef.setInput(
+      'order',
       new Order('ORD-TEST', 'Draft', [new OrderLine('Test Product', 1, 20)], 20),
     );
 
@@ -282,7 +286,8 @@ describe('Order Editor', () => {
     const fixture = TestBed.createComponent(OrderEditor);
     const orderEditor = fixture.componentInstance;
 
-    orderEditor.order.set(
+    fixture.componentRef.setInput(
+      'order',
       new Order(
         'ORD-1001',
         'Draft',

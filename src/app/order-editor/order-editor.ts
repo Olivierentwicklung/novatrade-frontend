@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { loadOrder } from '../application/load-order';
 import { placeOrder } from '../application/place-order';
 import { RestOrderApi } from '../adapters/rest/rest-order-api';
@@ -12,7 +12,8 @@ import { OrderLine } from '../domain/order-line';
   styleUrl: './order-editor.css',
 })
 export class OrderEditor {
-  readonly order = signal<Order | null>(null);
+  readonly order = input<Order | null>(null);
+  readonly orderChange = output<Order | null>();
   private readonly orderApi = new RestOrderApi(fetch);
 
   readonly total = computed(() => {
@@ -26,12 +27,14 @@ export class OrderEditor {
   });
 
   increaseProductQuantity(productName: string) {
-    this.order.update((order) => {
-      if (!order) {
-        return order;
-      }
+    const order = this.order();
 
-      return new Order(
+    if (!order) {
+      return;
+    }
+
+    this.orderChange.emit(
+      new Order(
         order.id,
         order.status,
         order.lines.map((line) =>
@@ -40,17 +43,19 @@ export class OrderEditor {
             : line,
         ),
         order.total,
-      );
-    });
+      ),
+    );
   }
 
   decreaseProductQuantity(productName: string) {
-    this.order.update((order) => {
-      if (!order) {
-        return order;
-      }
+    const order = this.order();
 
-      return new Order(
+    if (!order) {
+      return;
+    }
+
+    this.orderChange.emit(
+      new Order(
         order.id,
         order.status,
         order.lines.map((line) => {
@@ -61,23 +66,25 @@ export class OrderEditor {
           return new OrderLine(line.productName, line.quantity - 1, line.unitPrice);
         }),
         order.total,
-      );
-    });
+      ),
+    );
   }
 
   removeProductFromOrder(productName: string) {
-    this.order.update((order) => {
-      if (!order) {
-        return order;
-      }
+    const order = this.order();
 
-      return new Order(
+    if (!order) {
+      return;
+    }
+
+    this.orderChange.emit(
+      new Order(
         order.id,
         order.status,
         order.lines.filter((line) => line.productName !== productName),
         order.total,
-      );
-    });
+      ),
+    );
   }
 
   placeOrder() {
@@ -91,6 +98,8 @@ export class OrderEditor {
   }
 
   async loadOrder() {
-    this.order.set(await loadOrder('ORD-1001', this.orderApi));
+    const order = await loadOrder('ORD-1001', this.orderApi);
+
+    this.orderChange.emit(order);
   }
 }

@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { OrderEditor } from './order-editor/order-editor';
 import { OrderReview } from './order-review/order-review';
+import { Order } from './domain/order';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ import { OrderReview } from './order-review/order-review';
 })
 export class App {
   readonly step = signal<'edit' | 'review'>('edit');
+  readonly order = signal<Order | null>(null);
 
   reviewOrder() {
     this.step.set('review');
