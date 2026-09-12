@@ -1,7 +1,5 @@
-import { Component, computed, input, OnInit, output } from '@angular/core';
-import { loadOrder } from '../application/load-order';
-import { placeOrder } from '../application/place-order';
-import { RestOrderApi } from '../adapters/rest/rest-order-api';
+import { Component, computed, input, output } from '@angular/core';
+
 import { calculateOrderTotal } from '../domain/calculate-order-total';
 import { Order } from '../domain/order';
 import { OrderLine } from '../domain/order-line';
@@ -11,10 +9,10 @@ import { OrderLine } from '../domain/order-line';
   templateUrl: './order-editor.html',
   styleUrl: './order-editor.css',
 })
-export class OrderEditor implements OnInit {
+export class OrderEditor {
   readonly order = input<Order | null>(null);
   readonly orderChange = output<Order | null>();
-  private readonly orderApi = new RestOrderApi(fetch);
+  readonly placeRequested = output<void>();
 
   readonly total = computed(() => {
     const order = this.order();
@@ -25,10 +23,6 @@ export class OrderEditor implements OnInit {
 
     return calculateOrderTotal(order.lines);
   });
-
-  async ngOnInit() {
-    // await this.loadOrder();
-  }
 
   increaseProductQuantity(productName: string) {
     const order = this.order();
@@ -91,21 +85,7 @@ export class OrderEditor implements OnInit {
     );
   }
 
-  async placeOrder() {
-    const order = this.order();
-
-    if (!order) {
-      return;
-    }
-
-    await placeOrder(order, this.orderApi);
-
-    this.orderChange.emit(new Order(order.id, order.status, order.lines, order.total));
-  }
-
-  async loadOrder() {
-    const order = await loadOrder('ORD-1001', this.orderApi);
-
-    this.orderChange.emit(order);
+  requestOrderPlacement() {
+    this.placeRequested.emit();
   }
 }
