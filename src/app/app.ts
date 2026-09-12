@@ -1,14 +1,21 @@
 import { Component, signal } from '@angular/core';
+import { email, form, FormField, required } from '@angular/forms/signals';
+
+import { RestOrderApi } from './adapters/rest/rest-order-api';
+import { loadOrder } from './application/load-order';
+import { placeOrder } from './application/place-order';
+import { Order } from './domain/order';
 import { OrderEditor } from './order-editor/order-editor';
 import { OrderReview } from './order-review/order-review';
-import { Order } from './domain/order';
-import { RestOrderApi } from './adapters/rest/rest-order-api';
-import { placeOrder } from './application/place-order';
-import { loadOrder } from './application/load-order';
+
+interface CheckoutDetails {
+  email: string;
+  deliveryAddress: string;
+}
 
 @Component({
   selector: 'app-root',
-  imports: [OrderEditor, OrderReview],
+  imports: [OrderEditor, OrderReview, FormField],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -16,13 +23,22 @@ export class App {
   readonly step = signal<'edit' | 'review'>('edit');
   readonly order = signal<Order | null>(null);
 
-  readonly checkoutEmail = signal('');
-  readonly deliveryAddress = signal('');
+  readonly checkoutModel = signal<CheckoutDetails>({
+    email: '',
+    deliveryAddress: '',
+  });
+
+  readonly checkoutForm = form(this.checkoutModel, (checkout) => {
+    required(checkout.email);
+    email(checkout.email);
+
+    required(checkout.deliveryAddress);
+  });
 
   private readonly orderApi = new RestOrderApi(fetch);
 
   reviewOrder() {
-    if (!this.hasValidCheckoutDetails()) {
+    if (this.checkoutForm().invalid()) {
       return;
     }
 
@@ -45,12 +61,5 @@ export class App {
     const authoritativeOrder = await loadOrder(order.id, this.orderApi);
 
     this.order.set(authoritativeOrder);
-  }
-
-  private hasValidCheckoutDetails(): boolean {
-    const email = this.checkoutEmail().trim();
-    const address = this.deliveryAddress().trim();
-
-    return email.length > 0 && address.length > 0 && email.includes('@');
   }
 }

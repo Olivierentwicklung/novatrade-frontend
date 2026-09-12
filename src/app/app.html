@@ -1,4 +1,14 @@
 @if (step() === 'edit') {
+  <div>
+    <label for="checkout-email">Email</label>
+    <input id="checkout-email" type="email" [formField]="checkoutForm.email" />
+  </div>
+
+  <div>
+    <label for="delivery-address">Delivery address</label>
+    <input id="delivery-address" type="text" [formField]="checkoutForm.deliveryAddress" />
+  </div>
+
   <app-order-editor
     [order]="order()"
     (orderChange)="order.set($event)"

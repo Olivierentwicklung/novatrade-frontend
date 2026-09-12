@@ -19,8 +19,10 @@ describe('App', () => {
   it('should move from editing an order to reviewing it and back', () => {
     const fixture = TestBed.createComponent(App);
 
-    fixture.componentInstance.checkoutEmail.set('customer@example.com');
-    fixture.componentInstance.deliveryAddress.set('Example Street 10');
+    fixture.componentInstance.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
 
     fixture.detectChanges();
 
@@ -149,8 +151,10 @@ describe('App', () => {
   it('should not continue to review with an invalid email address', () => {
     const fixture = TestBed.createComponent(App);
 
-    fixture.componentInstance.checkoutEmail.set('not-an-email');
-    fixture.componentInstance.deliveryAddress.set('Example Street 10');
+    fixture.componentInstance.checkoutModel.set({
+      email: 'not-an-email',
+      deliveryAddress: 'Example Street 10',
+    });
 
     fixture.detectChanges();
 
