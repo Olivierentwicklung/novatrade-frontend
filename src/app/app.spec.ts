@@ -167,4 +167,37 @@ describe('App', () => {
 
     expect(decreaseButton.disabled).toBe(true);
   });
+
+  it('should display the order loaded through the application', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        json: vi.fn().mockResolvedValue({
+          id: 'ORD-2002',
+          status: 'Draft',
+          lines: [
+            {
+              product_name: 'USB-C Dock',
+              quantity: 1,
+              unit_price: 89.99,
+            },
+          ],
+          total: 89.99,
+        }),
+      }),
+    );
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('ORD-2002');
+    expect(compiled.textContent).toContain('USB-C Dock');
+    expect(compiled.textContent).toContain('89.99');
+  });
 });
