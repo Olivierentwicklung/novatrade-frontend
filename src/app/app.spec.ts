@@ -205,4 +205,15 @@ describe('App', () => {
     expect(compiled.textContent).toContain('USB-C Dock');
     expect(compiled.textContent).toContain('89.99');
   });
+
+  it('should not display an order before it has been loaded', () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).not.toContain('ORD-1001');
+    expect(compiled.textContent).not.toContain('Mechanical Keyboard');
+  });
 });
