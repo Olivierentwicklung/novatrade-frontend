@@ -1,6 +1,7 @@
 import { OrderApi } from '../../application/ports/order-api';
 import { Order } from '../../domain/order';
 import { OrderLine } from '../../domain/order-line';
+import { OrderDto } from './order-dto';
 
 type FetchResponse = {
   json(): Promise<unknown>;
@@ -20,16 +21,7 @@ export class RestOrderApi implements OrderApi {
   async getOrder(orderId: string): Promise<Order> {
     const response = await this.fetch(`/api/orders/${orderId}/`);
 
-    const data = (await response.json()) as {
-      id: string;
-      status: string;
-      lines: {
-        product_name: string;
-        quantity: number;
-        unit_price: number;
-      }[];
-      total: number;
-    };
+    const data = (await response.json()) as OrderDto;
 
     return new Order(
       data.id,
