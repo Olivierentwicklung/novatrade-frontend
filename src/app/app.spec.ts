@@ -168,4 +168,31 @@ describe('App', () => {
     expect(compiled.querySelector('app-order-editor')).toBeTruthy();
     expect(compiled.querySelector('app-order-review')).toBeNull();
   });
+
+  it('should continue to review after entering valid checkout details', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const emailInput = compiled.querySelector('#checkout-email') as HTMLInputElement;
+
+    const addressInput = compiled.querySelector('#delivery-address') as HTMLInputElement;
+
+    emailInput.value = 'customer@example.com';
+    emailInput.dispatchEvent(new Event('input'));
+
+    addressInput.value = 'Example Street 10';
+    addressInput.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    const reviewButton = compiled.querySelector('[aria-label="Review order"]') as HTMLButtonElement;
+
+    reviewButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-order-review')).toBeTruthy();
+    expect(compiled.querySelector('app-order-editor')).toBeNull();
+  });
 });
