@@ -18,8 +18,10 @@ describe('App', () => {
 
   it('should move from editing an order to reviewing it and back', () => {
     const fixture = TestBed.createComponent(App);
+
     fixture.componentInstance.checkoutEmail.set('customer@example.com');
     fixture.componentInstance.deliveryAddress.set('Example Street 10');
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -131,6 +133,25 @@ describe('App', () => {
 
   it('should not continue to review without required checkout details', () => {
     const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const reviewButton = compiled.querySelector('[aria-label="Review order"]') as HTMLButtonElement;
+
+    reviewButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-order-editor')).toBeTruthy();
+    expect(compiled.querySelector('app-order-review')).toBeNull();
+  });
+
+  it('should not continue to review with an invalid email address', () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.checkoutEmail.set('not-an-email');
+    fixture.componentInstance.deliveryAddress.set('Example Street 10');
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
