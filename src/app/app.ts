@@ -1,5 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { email, form, FormField, required } from '@angular/forms/signals';
+import { Location } from '@angular/common';
 
 import { loadOrder } from './application/load-order';
 import { placeOrder } from './application/place-order';
@@ -30,6 +31,9 @@ export class App implements OnInit {
 
   readonly placementInProgress = signal(false);
 
+  private readonly location = inject(Location);
+  private readonly destroyRef = inject(DestroyRef);
+
   readonly checkoutModel = signal<CheckoutDetails>({
     email: '',
     deliveryAddress: '',
@@ -50,6 +54,16 @@ export class App implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
+    this.restoreStepFromLocation();
+
+    const locationSubscription = this.location.subscribe(() => {
+      this.restoreStepFromLocation();
+    });
+
+    this.destroyRef.onDestroy(() => {
+      locationSubscription.unsubscribe();
+    });
+
     const order = await loadOrder('ORD-1001', this.orderApi);
 
     this.order.set(order);
@@ -61,10 +75,12 @@ export class App implements OnInit {
     }
 
     this.step.set('review');
+    this.location.go('/checkout/review');
   }
 
   editOrder() {
     this.step.set('edit');
+    this.location.go('/checkout/edit');
   }
 
   async placeCurrentOrder(): Promise<void> {
@@ -98,5 +114,9 @@ export class App implements OnInit {
     } finally {
       this.placementInProgress.set(false);
     }
+  }
+
+  private restoreStepFromLocation(): void {
+    this.step.set(this.location.path() === '/checkout/review' ? 'review' : 'edit');
   }
 }
