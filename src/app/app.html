@@ -76,11 +76,7 @@
           </div>
 
           <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <app-order-editor
-              [order]="order()"
-              (orderChange)="order.set($event)"
-              (placeRequested)="placeCurrentOrder()"
-            />
+            <app-order-editor [order]="order()" (orderChange)="order.set($event)" />
           </div>
         </section>
 
@@ -302,7 +298,10 @@
         class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
         aria-label="Order review"
       >
-        <app-order-review (placeRequested)="placeCurrentOrder()" />
+        <app-order-review
+          [placementInProgress]="placementInProgress()"
+          (placeRequested)="placeCurrentOrder()"
+        />
       </section>
 
       <div class="mt-6">

@@ -28,7 +28,7 @@ export class App implements OnInit {
   readonly order = signal<Order | null>(null);
   readonly placementError = signal<string | null>(null);
 
-  private placementInProgress = false;
+  readonly placementInProgress = signal(false);
 
   readonly checkoutModel = signal<CheckoutDetails>({
     email: '',
@@ -68,7 +68,7 @@ export class App implements OnInit {
   }
 
   async placeCurrentOrder(): Promise<void> {
-    if (this.placementInProgress) {
+    if (this.placementInProgress()) {
       return;
     }
 
@@ -78,7 +78,7 @@ export class App implements OnInit {
       return;
     }
 
-    this.placementInProgress = true;
+    this.placementInProgress.set(true);
     this.placementError.set(null);
 
     try {
@@ -96,7 +96,7 @@ export class App implements OnInit {
 
       throw error;
     } finally {
-      this.placementInProgress = false;
+      this.placementInProgress.set(false);
     }
   }
 }
