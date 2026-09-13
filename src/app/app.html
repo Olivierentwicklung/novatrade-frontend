@@ -76,7 +76,39 @@
           </div>
 
           <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <app-order-editor [order]="order()" (orderChange)="order.set($event)" />
+            @if (order(); as currentOrder) {
+              @if (currentOrder.status === 'Submitted') {
+                <div class="p-6">
+                  <p class="text-sm font-medium text-slate-500">
+                    {{ currentOrder.id }}
+                  </p>
+
+                  <h2 class="mt-1 text-2xl font-bold text-slate-950">
+                    {{ currentOrder.status }}
+                  </h2>
+
+                  <div class="mt-6 space-y-4">
+                    @for (line of currentOrder.lines; track line.productName) {
+                      <div>
+                        <p class="font-semibold text-slate-950">
+                          {{ line.productName }}
+                        </p>
+
+                        <p class="text-sm text-slate-600">Quantity: {{ line.quantity }}</p>
+
+                        <p class="text-sm text-slate-600">Unit price: {{ line.unitPrice }}</p>
+                      </div>
+                    }
+                  </div>
+
+                  <p class="mt-6 font-semibold text-slate-950">Total: {{ currentOrder.total }}</p>
+                </div>
+              } @else {
+                <app-order-editor [order]="currentOrder" (orderChange)="order.set($event)" />
+              }
+            } @else {
+              <p class="p-6 text-slate-500">Loading order...</p>
+            }
           </div>
         </section>
 
