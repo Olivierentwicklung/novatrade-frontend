@@ -1,27 +1,27 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
 import { OrderApi } from '../../application/ports/order-api';
 import { Order } from '../../domain/order';
 import { OrderLine } from '../../domain/order-line';
 import { OrderDto } from './order-dto';
 
-type FetchResponse = {
-  json(): Promise<unknown>;
-};
-
-type Fetch = (input: string, init?: RequestInit) => Promise<FetchResponse>;
-
+@Injectable()
 export class RestOrderApi implements OrderApi {
-  constructor(private readonly fetch: Fetch) {}
+  constructor(private readonly http: HttpClient) {}
 
   async placeOrder(orderId: string): Promise<void> {
-    await this.fetch(`/api/orders/${orderId}/place/`, {
-      method: 'POST',
-    });
+    await firstValueFrom(
+      this.http.post<void>(`${environment.apiBaseUrl}/orders/${orderId}/place`, {}),
+    );
   }
 
   async getOrder(orderId: string): Promise<Order> {
-    const response = await this.fetch(`/api/orders/${orderId}/`);
-
-    const data = (await response.json()) as OrderDto;
+    const data = await firstValueFrom(
+      this.http.get<OrderDto>(`${environment.apiBaseUrl}/orders/${orderId}`),
+    );
 
     return new Order(
       data.id,
