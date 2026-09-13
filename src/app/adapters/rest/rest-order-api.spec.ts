@@ -65,4 +65,24 @@ describe('RestOrderApi', () => {
       new Order('ORD-1001', 'Draft', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
     );
   });
+
+  it('should translate a conflict when order placement is rejected', async () => {
+    const placement = orderApi.placeOrder('ORD-1001');
+
+    const request = httpTesting.expectOne(`${environment.apiBaseUrl}/orders/ORD-1001/place`);
+
+    expect(request.request.method).toBe('POST');
+
+    request.flush(
+      {
+        error: 'Only draft orders can be placed',
+      },
+      {
+        status: 409,
+        statusText: 'Conflict',
+      },
+    );
+
+    await expect(placement).rejects.toThrow('Order placement rejected');
+  });
 });
