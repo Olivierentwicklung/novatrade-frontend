@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { email, form, FormField, required } from '@angular/forms/signals';
+import { Location } from '@angular/common';
 
 import { loadOrder } from './application/load-order';
 import { placeOrder } from './application/place-order';
@@ -29,6 +30,8 @@ export class App implements OnInit {
   readonly placementError = signal<string | null>(null);
 
   readonly placementInProgress = signal(false);
+
+  private readonly location = inject(Location);
 
   readonly checkoutModel = signal<CheckoutDetails>({
     email: '',
@@ -61,10 +64,12 @@ export class App implements OnInit {
     }
 
     this.step.set('review');
+    this.location.go('/checkout/review');
   }
 
   editOrder() {
     this.step.set('edit');
+    this.location.go('/checkout/edit');
   }
 
   async placeCurrentOrder(): Promise<void> {
