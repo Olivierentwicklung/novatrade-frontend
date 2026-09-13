@@ -1,0 +1,21 @@
+{
+  "orders": [
+    {
+      "id": "ORD-1001",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "Mechanical Keyboard",
+          "quantity": 1,
+          "unit_price": 129.99
+        },
+        {
+          "product_name": "Wireless Mouse",
+          "quantity": 2,
+          "unit_price": 49.99
+        }
+      ],
+      "total": 229.97
+    }
+  ]
+}
