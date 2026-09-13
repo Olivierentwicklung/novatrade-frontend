@@ -211,4 +211,23 @@ describe('App', () => {
 
     expect(compiled.querySelector('app-order-editor')).toBeNull();
   });
+
+  it('should show a meaningful message when order placement is rejected', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
+
+    component.order.set(draftOrder());
+
+    orderApi.placeOrder.mockRejectedValue(new Error('Order placement rejected'));
+
+    await component.placeCurrentOrder();
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('[role="alert"]')?.textContent).toContain(
+      'This order can no longer be placed.',
+    );
+  });
 });
