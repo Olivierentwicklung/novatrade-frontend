@@ -109,55 +109,6 @@ describe('Order Editor', () => {
     expect(compiled.textContent).toContain('Quantity: 1');
   });
 
-  it('should request order placement', () => {
-    const fixture = TestBed.createComponent(OrderEditor);
-
-    setTestOrder(fixture);
-
-    const placeRequested = vi.fn();
-
-    fixture.componentInstance.placeRequested.subscribe(placeRequested);
-
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    const submitButton = compiled.querySelector('[aria-label="Place order"]') as HTMLButtonElement;
-
-    submitButton.click();
-
-    expect(placeRequested).toHaveBeenCalledOnce();
-  });
-
-  it('should not place an order without products', () => {
-    const fixture = TestBed.createComponent(OrderEditor);
-
-    connectOrder(fixture, createTestOrder());
-
-    const compiled = fixture.nativeElement as HTMLElement;
-
-    const removeMechanicalKeyboardButton = compiled.querySelector(
-      '[aria-label="Remove Mechanical Keyboard"]',
-    ) as HTMLButtonElement;
-
-    const removeWirelessMouseButton = compiled.querySelector(
-      '[aria-label="Remove Wireless Mouse"]',
-    ) as HTMLButtonElement;
-
-    removeMechanicalKeyboardButton.click();
-    fixture.detectChanges();
-
-    removeWirelessMouseButton.click();
-    fixture.detectChanges();
-
-    const placeOrderButton = compiled.querySelector(
-      '[aria-label="Place order"]',
-    ) as HTMLButtonElement;
-
-    placeOrderButton.click();
-    fixture.detectChanges();
-
-    expect(compiled.textContent).toContain('Draft');
-  });
-
   it('should display the total price for a product entry', () => {
     const fixture = TestBed.createComponent(OrderEditor);
 

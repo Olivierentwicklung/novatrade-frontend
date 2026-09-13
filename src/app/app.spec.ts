@@ -231,4 +231,99 @@ describe('App', () => {
       'This order can no longer be placed.',
     );
   });
+
+  it('should not place the order again while placement is already in progress', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
+
+    component.order.set(draftOrder());
+
+    let resolvePlacement!: () => void;
+
+    orderApi.placeOrder.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolvePlacement = resolve;
+        }),
+    );
+
+    const firstPlacement = component.placeCurrentOrder();
+
+    await Promise.resolve();
+
+    const secondPlacement = component.placeCurrentOrder();
+
+    expect(orderApi.placeOrder).toHaveBeenCalledOnce();
+
+    resolvePlacement();
+
+    await firstPlacement;
+    await secondPlacement;
+  });
+
+  it('should only offer order placement from the review step', async () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('[aria-label="Place order"]')).toBeNull();
+
+    const reviewButton = compiled.querySelector('[aria-label="Review order"]') as HTMLButtonElement;
+
+    reviewButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('[aria-label="Place order"]')).toBeTruthy();
+  });
+
+  it('should show that placement is in progress while waiting for the backend', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
+
+    component.order.set(draftOrder());
+
+    component.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    component.reviewOrder();
+    fixture.detectChanges();
+
+    let resolvePlacement!: () => void;
+
+    orderApi.placeOrder.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolvePlacement = resolve;
+        }),
+    );
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const placeButton = compiled.querySelector('[aria-label="Place order"]') as HTMLButtonElement;
+
+    placeButton.click();
+    fixture.detectChanges();
+
+    expect(placeButton.disabled).toBe(true);
+    expect(placeButton.textContent).toContain('Placing order');
+
+    resolvePlacement();
+
+    await fixture.whenStable();
+  });
 });

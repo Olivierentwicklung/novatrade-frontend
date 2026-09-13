@@ -12,7 +12,6 @@ import { OrderLine } from '../domain/order-line';
 export class OrderEditor {
   readonly order = input<Order | null>(null);
   readonly orderChange = output<Order | null>();
-  readonly placeRequested = output<void>();
 
   readonly total = computed(() => {
     const order = this.order();
@@ -83,9 +82,5 @@ export class OrderEditor {
         order.total,
       ),
     );
-  }
-
-  requestOrderPlacement() {
-    this.placeRequested.emit();
   }
 }
