@@ -355,4 +355,38 @@ describe('App', () => {
 
     expect(location.path()).toBe('/checkout/review');
   });
+
+  it('should return to editing when navigating back from review', async () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const reviewButton = compiled.querySelector('[aria-label="Review order"]') as HTMLButtonElement;
+
+    reviewButton.click();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-order-review')).toBeTruthy();
+
+    const location = TestBed.inject(Location);
+
+    location.back();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('app-order-editor')).toBeTruthy();
+    expect(compiled.querySelector('app-order-review')).toBeNull();
+  });
 });
