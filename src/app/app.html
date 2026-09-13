@@ -1,8 +1,3 @@
-@if (placementError()) {
-  <p role="alert">
-    {{ placementError() }}
-  </p>
-}
 @if (step() === 'edit') {
   <main class="min-h-screen bg-slate-50">
     <div class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
@@ -31,9 +26,11 @@
           <div class="flex items-center gap-2 text-slate-950">
             <span
               class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-white"
+              aria-current="step"
             >
               1
             </span>
+
             Edit
           </div>
 
@@ -45,19 +42,36 @@
             >
               2
             </span>
+
             Review
           </div>
         </div>
       </header>
 
+      @if (placementError()) {
+        <div
+          class="mb-8 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-800"
+          role="alert"
+          aria-live="polite"
+        >
+          <p class="font-semibold">We couldn’t place your order.</p>
+
+          <p class="mt-1 text-sm leading-6">
+            {{ placementError() }}
+          </p>
+        </div>
+      }
+
       <div class="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
         <!-- Order -->
-        <section>
+        <section aria-labelledby="order-details-heading">
           <div class="mb-4 flex items-end justify-between gap-4">
             <div>
               <p class="text-sm font-medium text-slate-500">Your basket</p>
 
-              <h2 class="mt-1 text-2xl font-bold text-slate-950">Order details</h2>
+              <h2 id="order-details-heading" class="mt-1 text-2xl font-bold text-slate-950">
+                Order details
+              </h2>
             </div>
           </div>
 
@@ -70,15 +84,17 @@
           </div>
         </section>
 
-        <!-- Checkout Details -->
-        <aside>
+        <!-- Checkout details -->
+        <aside aria-labelledby="checkout-details-heading">
           <div
             class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-8"
           >
             <div class="border-b border-slate-100 pb-5">
               <p class="text-sm font-medium text-slate-500">Delivery information</p>
 
-              <h2 class="mt-1 text-xl font-bold text-slate-950">Checkout details</h2>
+              <h2 id="checkout-details-heading" class="mt-1 text-xl font-bold text-slate-950">
+                Checkout details
+              </h2>
 
               <p class="mt-2 text-sm leading-6 text-slate-600">
                 We need these details before you can review your order.
@@ -98,11 +114,26 @@
                   autocomplete="email"
                   placeholder="you@example.com"
                   [formField]="checkoutForm.email"
+                  [attr.aria-invalid]="
+                    checkoutForm.email().touched() && checkoutForm.email().invalid() ? 'true' : null
+                  "
+                  [attr.aria-describedby]="
+                    checkoutForm.email().touched() && checkoutForm.email().invalid()
+                      ? 'checkout-email-error'
+                      : null
+                  "
+                  [class.border-red-400]="
+                    checkoutForm.email().touched() && checkoutForm.email().invalid()
+                  "
+                  [class.focus:border-red-500]="
+                    checkoutForm.email().touched() && checkoutForm.email().invalid()
+                  "
                   class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5"
                 />
 
                 @if (checkoutForm.email().touched() && checkoutForm.email().invalid()) {
                   <div
+                    id="checkout-email-error"
                     class="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"
                     role="alert"
                   >
@@ -128,6 +159,26 @@
                   autocomplete="street-address"
                   placeholder="Example Street 10"
                   [formField]="checkoutForm.deliveryAddress"
+                  [attr.aria-invalid]="
+                    checkoutForm.deliveryAddress().touched() &&
+                    checkoutForm.deliveryAddress().invalid()
+                      ? 'true'
+                      : null
+                  "
+                  [attr.aria-describedby]="
+                    checkoutForm.deliveryAddress().touched() &&
+                    checkoutForm.deliveryAddress().invalid()
+                      ? 'delivery-address-error'
+                      : null
+                  "
+                  [class.border-red-400]="
+                    checkoutForm.deliveryAddress().touched() &&
+                    checkoutForm.deliveryAddress().invalid()
+                  "
+                  [class.focus:border-red-500]="
+                    checkoutForm.deliveryAddress().touched() &&
+                    checkoutForm.deliveryAddress().invalid()
+                  "
                   class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5"
                 />
 
@@ -136,6 +187,7 @@
                   checkoutForm.deliveryAddress().invalid()
                 ) {
                   <div
+                    id="delivery-address-error"
                     class="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"
                     role="alert"
                   >
@@ -151,6 +203,7 @@
               <div class="flex gap-3">
                 <div
                   class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm"
+                  aria-hidden="true"
                 >
                   ✓
                 </div>
@@ -169,7 +222,7 @@
             >
               Continue to review
 
-              <span aria-hidden="true"> → </span>
+              <span aria-hidden="true">→</span>
             </button>
 
             <p class="mt-3 text-center text-xs leading-5 text-slate-500">
@@ -184,17 +237,35 @@
   <main class="min-h-screen bg-slate-50">
     <div class="mx-auto max-w-5xl px-6 py-10 lg:px-8">
       <header class="mb-8">
-        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">NovaTrade</p>
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-lg font-bold text-white"
+          >
+            N
+          </div>
 
-        <h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-950">Review your order</h1>
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+              NovaTrade
+            </p>
 
-        <div class="mt-6 flex items-center gap-3 text-sm font-medium">
+            <h1 class="text-3xl font-bold tracking-tight text-slate-950">Review your order</h1>
+          </div>
+        </div>
+
+        <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+          Check everything one last time before placing your order.
+        </p>
+
+        <div class="mt-8 flex items-center gap-3 text-sm font-medium">
           <div class="flex items-center gap-2 text-slate-500">
             <span
               class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white"
+              aria-hidden="true"
             >
               ✓
             </span>
+
             Edit
           </div>
 
@@ -203,26 +274,46 @@
           <div class="flex items-center gap-2 text-slate-950">
             <span
               class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-white"
+              aria-current="step"
             >
               2
             </span>
+
             Review
           </div>
         </div>
       </header>
 
-      <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      @if (placementError()) {
+        <div
+          class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-800"
+          role="alert"
+          aria-live="polite"
+        >
+          <p class="font-semibold">We couldn’t place your order.</p>
+
+          <p class="mt-1 text-sm leading-6">
+            {{ placementError() }}
+          </p>
+        </div>
+      }
+
+      <section
+        class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+        aria-label="Order review"
+      >
         <app-order-review />
-      </div>
+      </section>
 
       <div class="mt-6">
         <button
           type="button"
           aria-label="Edit order"
           (click)="editOrder()"
-          class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-900/10"
         >
-          ← Back to edit
+          <span aria-hidden="true">←</span>
+          Back to edit
         </button>
       </div>
     </div>
