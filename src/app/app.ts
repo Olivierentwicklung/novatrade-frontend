@@ -54,8 +54,10 @@ export class App implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
+    this.restoreStepFromLocation();
+
     const locationSubscription = this.location.subscribe(() => {
-      this.step.set(this.location.path() === '/checkout/review' ? 'review' : 'edit');
+      this.restoreStepFromLocation();
     });
 
     this.destroyRef.onDestroy(() => {
@@ -112,5 +114,9 @@ export class App implements OnInit {
     } finally {
       this.placementInProgress.set(false);
     }
+  }
+
+  private restoreStepFromLocation(): void {
+    this.step.set(this.location.path() === '/checkout/review' ? 'review' : 'edit');
   }
 }
