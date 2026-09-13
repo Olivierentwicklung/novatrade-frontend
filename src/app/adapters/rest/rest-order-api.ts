@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -13,9 +13,17 @@ export class RestOrderApi implements OrderApi {
   constructor(private readonly http: HttpClient) {}
 
   async placeOrder(orderId: string): Promise<void> {
-    await firstValueFrom(
-      this.http.post<void>(`${environment.apiBaseUrl}/orders/${orderId}/place`, {}),
-    );
+    try {
+      await firstValueFrom(
+        this.http.post<void>(`${environment.apiBaseUrl}/orders/${orderId}/place`, {}),
+      );
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && error.status === 409) {
+        throw new Error('Order placement rejected');
+      }
+
+      throw error;
+    }
   }
 
   async getOrder(orderId: string): Promise<Order> {
