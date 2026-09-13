@@ -260,4 +260,28 @@ describe('App', () => {
     await firstPlacement;
     await secondPlacement;
   });
+
+  it('should only offer order placement from the review step', async () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('[aria-label="Place order"]')).toBeNull();
+
+    const reviewButton = compiled.querySelector('[aria-label="Review order"]') as HTMLButtonElement;
+
+    reviewButton.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('[aria-label="Place order"]')).toBeTruthy();
+  });
 });
