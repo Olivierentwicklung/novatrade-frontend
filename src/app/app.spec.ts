@@ -231,4 +231,33 @@ describe('App', () => {
       'This order can no longer be placed.',
     );
   });
+
+  it('should not place the order again while placement is already in progress', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
+
+    component.order.set(draftOrder());
+
+    let resolvePlacement!: () => void;
+
+    orderApi.placeOrder.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolvePlacement = resolve;
+        }),
+    );
+
+    const firstPlacement = component.placeCurrentOrder();
+
+    await Promise.resolve();
+
+    const secondPlacement = component.placeCurrentOrder();
+
+    expect(orderApi.placeOrder).toHaveBeenCalledOnce();
+
+    resolvePlacement();
+
+    await firstPlacement;
+    await secondPlacement;
+  });
 });
