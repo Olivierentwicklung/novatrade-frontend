@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Location } from '@angular/common';
+import { provideRouter } from '@angular/router';
 
 import { App } from './app';
 import { OrderApi } from './application/ports/order-api';
@@ -34,6 +36,7 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
+        provideRouter([]),
         {
           provide: ORDER_API,
           useValue: orderApi satisfies OrderApi,
@@ -325,5 +328,31 @@ describe('App', () => {
     resolvePlacement();
 
     await fixture.whenStable();
+  });
+
+  it('should represent the review step in navigation', async () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const reviewButton = compiled.querySelector('[aria-label="Review order"]') as HTMLButtonElement;
+
+    reviewButton.click();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const location = TestBed.inject(Location);
+
+    expect(location.path()).toBe('/checkout/review');
   });
 });
