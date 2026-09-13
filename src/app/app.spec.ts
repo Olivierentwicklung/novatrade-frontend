@@ -7,6 +7,7 @@ import { ORDER_API } from './application/ports/order-api.token';
 import { Order } from './domain/order';
 import { OrderLine } from './domain/order-line';
 import { OrderEditor } from './order-editor/order-editor';
+import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
 
 describe('App', () => {
   type OrderApiMock = {
@@ -210,5 +211,24 @@ describe('App', () => {
     expect(compiled.querySelector('app-order-review')).toBeTruthy();
 
     expect(compiled.querySelector('app-order-editor')).toBeNull();
+  });
+
+  it('should show a meaningful message when order placement is rejected', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
+
+    component.order.set(draftOrder());
+
+    orderApi.placeOrder.mockRejectedValue(new OrderPlacementRejected());
+
+    await component.placeCurrentOrder();
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('[role="alert"]')?.textContent).toContain(
+      'This order can no longer be placed.',
+    );
   });
 });

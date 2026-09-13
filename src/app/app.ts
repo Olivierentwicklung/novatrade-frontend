@@ -8,6 +8,7 @@ import { OrderEditor } from './order-editor/order-editor';
 import { OrderReview } from './order-review/order-review';
 
 import { ORDER_API } from './application/ports/order-api.token';
+import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
 
 interface CheckoutDetails {
   email: string;
@@ -25,6 +26,7 @@ export class App implements OnInit {
 
   readonly step = signal<'edit' | 'review'>('edit');
   readonly order = signal<Order | null>(null);
+  readonly placementError = signal<string | null>(null);
 
   readonly checkoutModel = signal<CheckoutDetails>({
     email: '',
@@ -63,17 +65,29 @@ export class App implements OnInit {
     this.step.set('edit');
   }
 
-  async placeCurrentOrder() {
+  async placeCurrentOrder(): Promise<void> {
     const order = this.order();
 
     if (!order) {
       return;
     }
 
-    await placeOrder(order, this.orderApi);
+    this.placementError.set(null);
 
-    const authoritativeOrder = await loadOrder(order.id, this.orderApi);
+    try {
+      await placeOrder(order, this.orderApi);
 
-    this.order.set(authoritativeOrder);
+      const authoritativeOrder = await loadOrder(order.id, this.orderApi);
+
+      this.order.set(authoritativeOrder);
+    } catch (error) {
+      if (error instanceof OrderPlacementRejected) {
+        this.placementError.set('This order can no longer be placed.');
+
+        return;
+      }
+
+      throw error;
+    }
   }
 }
