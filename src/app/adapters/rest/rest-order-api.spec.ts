@@ -1,41 +1,65 @@
-import { RestOrderApi } from './rest-order-api';
+import { HttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
 import { Order } from '../../domain/order';
 import { OrderLine } from '../../domain/order-line';
+import { RestOrderApi } from './rest-order-api';
+import { environment } from '../../../environments/environment';
 
 describe('RestOrderApi', () => {
+  let http: HttpClient;
+  let httpTesting: HttpTestingController;
+  let orderApi: RestOrderApi;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClientTesting()],
+    });
+
+    http = TestBed.inject(HttpClient);
+    httpTesting = TestBed.inject(HttpTestingController);
+
+    orderApi = new RestOrderApi(http);
+  });
+
+  afterEach(() => {
+    httpTesting.verify();
+  });
+
   it('should send an order placement request to the backend', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-    });
+    const placementPromise = orderApi.placeOrder('ORD-1001');
 
-    const orderApi = new RestOrderApi(fetchMock);
+    const request = httpTesting.expectOne(`${environment.apiBaseUrl}/orders/ORD-1001/place`);
 
-    await orderApi.placeOrder('ORD-1001');
+    expect(request.request.method).toBe('POST');
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/orders/ORD-1001/place/', {
-      method: 'POST',
-    });
+    request.flush(null);
+
+    await placementPromise;
   });
 
   it('should return an order from the backend', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      json: vi.fn().mockResolvedValue({
-        id: 'ORD-1001',
-        status: 'Draft',
-        lines: [
-          {
-            product_name: 'Mechanical Keyboard',
-            quantity: 1,
-            unit_price: 129.99,
-          },
-        ],
-        total: 129.99,
-      }),
+    const orderPromise = orderApi.getOrder('ORD-1001');
+
+    const request = httpTesting.expectOne(`${environment.apiBaseUrl}/orders/ORD-1001`);
+
+    expect(request.request.method).toBe('GET');
+
+    request.flush({
+      id: 'ORD-1001',
+      status: 'Draft',
+      lines: [
+        {
+          product_name: 'Mechanical Keyboard',
+          quantity: 1,
+          unit_price: 129.99,
+        },
+      ],
+      total: 129.99,
     });
 
-    const orderApi = new RestOrderApi(fetchMock);
-
-    const order = await orderApi.getOrder('ORD-1001');
+    const order = await orderPromise;
 
     expect(order).toEqual(
       new Order('ORD-1001', 'Draft', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),

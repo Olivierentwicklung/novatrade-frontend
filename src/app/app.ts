@@ -1,24 +1,61 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { email, form, FormField, required } from '@angular/forms/signals';
+
+import { loadOrder } from './application/load-order';
+import { placeOrder } from './application/place-order';
+import { Order } from './domain/order';
 import { OrderEditor } from './order-editor/order-editor';
 import { OrderReview } from './order-review/order-review';
-import { Order } from './domain/order';
-import { RestOrderApi } from './adapters/rest/rest-order-api';
-import { placeOrder } from './application/place-order';
-import { loadOrder } from './application/load-order';
+
+import { ORDER_API } from './application/ports/order-api.token';
+
+interface CheckoutDetails {
+  email: string;
+  deliveryAddress: string;
+}
 
 @Component({
   selector: 'app-root',
-  imports: [OrderEditor, OrderReview],
+  imports: [OrderEditor, OrderReview, FormField],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
+export class App implements OnInit {
+  private readonly orderApi = inject(ORDER_API);
+
   readonly step = signal<'edit' | 'review'>('edit');
   readonly order = signal<Order | null>(null);
 
-  private readonly orderApi = new RestOrderApi(fetch);
+  readonly checkoutModel = signal<CheckoutDetails>({
+    email: '',
+    deliveryAddress: '',
+  });
+
+  readonly checkoutForm = form(this.checkoutModel, (checkout) => {
+    required(checkout.email, {
+      message: 'Email is required',
+    });
+
+    email(checkout.email, {
+      message: 'Enter a valid email address',
+    });
+
+    required(checkout.deliveryAddress, {
+      message: 'Delivery address is required',
+    });
+  });
+
+  async ngOnInit(): Promise<void> {
+    const order = await loadOrder('ORD-1001', this.orderApi);
+
+    this.order.set(order);
+  }
 
   reviewOrder() {
+    if (this.checkoutForm().invalid()) {
+      return;
+    }
+
     this.step.set('review');
   }
 
