@@ -389,4 +389,26 @@ describe('App', () => {
     expect(compiled.querySelector('app-order-editor')).toBeTruthy();
     expect(compiled.querySelector('app-order-review')).toBeNull();
   });
+
+  it('should restore the review step from the initial navigation location', async () => {
+    const location = TestBed.inject(Location);
+
+    location.go('/checkout/review');
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('app-order-review')).toBeTruthy();
+    expect(compiled.querySelector('app-order-editor')).toBeNull();
+  });
 });
