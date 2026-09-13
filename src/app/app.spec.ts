@@ -284,4 +284,46 @@ describe('App', () => {
 
     expect(compiled.querySelector('[aria-label="Place order"]')).toBeTruthy();
   });
+
+  it('should show that placement is in progress while waiting for the backend', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
+
+    component.order.set(draftOrder());
+
+    component.checkoutModel.set({
+      email: 'customer@example.com',
+      deliveryAddress: 'Example Street 10',
+    });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    component.reviewOrder();
+    fixture.detectChanges();
+
+    let resolvePlacement!: () => void;
+
+    orderApi.placeOrder.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolvePlacement = resolve;
+        }),
+    );
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const placeButton = compiled.querySelector('[aria-label="Place order"]') as HTMLButtonElement;
+
+    placeButton.click();
+    fixture.detectChanges();
+
+    expect(placeButton.disabled).toBe(true);
+    expect(placeButton.textContent).toContain('Placing order');
+
+    resolvePlacement();
+
+    await fixture.whenStable();
+  });
 });
