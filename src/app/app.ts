@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { email, form, FormField, required } from '@angular/forms/signals';
 import { Location } from '@angular/common';
 
@@ -32,6 +32,7 @@ export class App implements OnInit {
   readonly placementInProgress = signal(false);
 
   private readonly location = inject(Location);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly checkoutModel = signal<CheckoutDetails>({
     email: '',
@@ -53,6 +54,14 @@ export class App implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
+    const locationSubscription = this.location.subscribe(() => {
+      this.step.set(this.location.path() === '/checkout/review' ? 'review' : 'edit');
+    });
+
+    this.destroyRef.onDestroy(() => {
+      locationSubscription.unsubscribe();
+    });
+
     const order = await loadOrder('ORD-1001', this.orderApi);
 
     this.order.set(order);
