@@ -7,6 +7,7 @@ import { ORDER_API } from './application/ports/order-api.token';
 import { Order } from './domain/order';
 import { OrderLine } from './domain/order-line';
 import { OrderEditor } from './order-editor/order-editor';
+import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
 
 describe('App', () => {
   type OrderApiMock = {
@@ -218,7 +219,7 @@ describe('App', () => {
 
     component.order.set(draftOrder());
 
-    orderApi.placeOrder.mockRejectedValue(new Error('Order placement rejected'));
+    orderApi.placeOrder.mockRejectedValue(new OrderPlacementRejected());
 
     await component.placeCurrentOrder();
 

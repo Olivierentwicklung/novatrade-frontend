@@ -7,6 +7,7 @@ import { OrderApi } from '../../application/ports/order-api';
 import { Order } from '../../domain/order';
 import { OrderLine } from '../../domain/order-line';
 import { OrderDto } from './order-dto';
+import { OrderPlacementRejected } from '../../application/errors/order-placement-rejected';
 
 @Injectable()
 export class RestOrderApi implements OrderApi {
@@ -19,7 +20,7 @@ export class RestOrderApi implements OrderApi {
       );
     } catch (error) {
       if (error instanceof HttpErrorResponse && error.status === 409) {
-        throw new Error('Order placement rejected');
+        throw new OrderPlacementRejected();
       }
 
       throw error;

@@ -8,6 +8,7 @@ import { OrderEditor } from './order-editor/order-editor';
 import { OrderReview } from './order-review/order-review';
 
 import { ORDER_API } from './application/ports/order-api.token';
+import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
 
 interface CheckoutDetails {
   email: string;
@@ -80,7 +81,7 @@ export class App implements OnInit {
 
       this.order.set(authoritativeOrder);
     } catch (error) {
-      if (error instanceof Error && error.message === 'Order placement rejected') {
+      if (error instanceof OrderPlacementRejected) {
         this.placementError.set('This order can no longer be placed.');
 
         return;
