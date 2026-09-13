@@ -411,4 +411,30 @@ describe('App', () => {
     expect(compiled.querySelector('app-order-review')).toBeTruthy();
     expect(compiled.querySelector('app-order-editor')).toBeNull();
   });
+
+  it('should show a submitted order as read-only information', () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.order.set(
+      new Order('ORD-1001', 'Submitted', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
+    );
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('ORD-1001');
+    expect(compiled.textContent).toContain('Mechanical Keyboard');
+    expect(compiled.textContent).toContain('Submitted');
+
+    expect(
+      compiled.querySelector('[aria-label="Increase Mechanical Keyboard quantity"]'),
+    ).toBeNull();
+
+    expect(
+      compiled.querySelector('[aria-label="Decrease Mechanical Keyboard quantity"]'),
+    ).toBeNull();
+
+    expect(compiled.querySelector('[aria-label="Remove Mechanical Keyboard"]')).toBeNull();
+  });
 });
