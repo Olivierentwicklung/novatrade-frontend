@@ -617,4 +617,64 @@ describe('App', () => {
     expect(compiled.textContent).toContain("You don't have any orders yet.");
     expect(compiled.textContent).not.toContain('Loading order...');
   });
+
+  it('should display the selected order from the order list', async () => {
+    orderApi.listOrders.mockResolvedValue([
+      {
+        id: 'ORD-2001',
+        status: 'Draft',
+        total: 79.99,
+        itemCount: 1,
+      },
+      {
+        id: 'ORD-2002',
+        status: 'Submitted',
+        total: 129.99,
+        itemCount: 1,
+      },
+    ]);
+
+    orderApi.getOrder.mockImplementation(async (orderId) => {
+      if (orderId === 'ORD-2001') {
+        return new Order('ORD-2001', 'Draft', [new OrderLine('USB-C Hub', 1, 79.99)], 79.99);
+      }
+
+      if (orderId === 'ORD-2002') {
+        return new Order(
+          'ORD-2002',
+          'Submitted',
+          [new OrderLine('Mechanical Keyboard', 1, 129.99)],
+          129.99,
+        );
+      }
+
+      throw new Error(`Unexpected order id: ${orderId}`);
+    });
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.order()?.id).toBe('ORD-2001');
+    });
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const orderButtons = compiled.querySelectorAll('[data-order-id]');
+
+    expect(orderButtons.length).toBe(2);
+
+    (orderButtons[1] as HTMLButtonElement).click();
+
+    await vi.waitFor(() => {
+      expect(orderApi.getOrder).toHaveBeenCalledWith('ORD-2002');
+      expect(fixture.componentInstance.order()?.id).toBe('ORD-2002');
+    });
+
+    fixture.detectChanges();
+
+    expect(compiled.textContent).toContain('Mechanical Keyboard');
+  });
 });
