@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import { Order } from '../domain/order';
 import { OrderLine } from '../domain/order-line';
 import { loadOrder } from './load-order';
+import { OrderReadApi } from './ports/order-read-api';
 
 describe('loadOrder', () => {
   it('should load an order through the order api', async () => {
@@ -12,9 +13,9 @@ describe('loadOrder', () => {
       129.99,
     );
 
-    const orderApi = {
-      placeOrder: vi.fn().mockResolvedValue(undefined),
+    const orderApi: OrderReadApi = {
       getOrder: vi.fn().mockResolvedValue(expectedOrder),
+      listOrders: vi.fn(),
     };
 
     const order = await loadOrder('ORD-1001', orderApi);

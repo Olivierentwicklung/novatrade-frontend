@@ -8,6 +8,7 @@ import { Order } from '../../domain/order';
 import { OrderLine } from '../../domain/order-line';
 import { OrderDto } from './order-dto';
 import { OrderPlacementRejected } from '../../application/errors/order-placement-rejected';
+import { OrderSummary } from '../../application/ports/order-read-api';
 
 @Injectable()
 export class RestOrderApi implements OrderApi {
@@ -38,5 +39,9 @@ export class RestOrderApi implements OrderApi {
       data.lines.map((line) => new OrderLine(line.product_name, line.quantity, line.unit_price)),
       data.total,
     );
+  }
+
+  async listOrders(): Promise<OrderSummary[]> {
+    throw new Error('Method not implemented.');
   }
 }

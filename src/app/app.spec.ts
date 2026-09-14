@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 
 import { App } from './app';
 import { OrderApi } from './application/ports/order-api';
+
 import { ORDER_API } from './application/ports/order-api.token';
 import { Order } from './domain/order';
 import { OrderLine } from './domain/order-line';
@@ -12,10 +13,15 @@ import { OrderEditor } from './order-editor/order-editor';
 import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
 
 describe('App', () => {
+  // Build the App test mock directly from OrderApi.
+  // - keyof OrderApi gives: "getOrder" | "placeOrder" | "listOrders"
+  // - OrderApi[K] gets the original function type for each method
+  // - vi.fn<OrderApi[K]> creates a Vitest mock with that same signature
+  // Result: if OrderApi changes later, this mock type changes with it.
   type OrderApiMock = {
-    getOrder: ReturnType<typeof vi.fn<(orderId: string) => Promise<Order>>>;
-    placeOrder: ReturnType<typeof vi.fn<(orderId: string) => Promise<void>>>;
+    [K in keyof OrderApi]: ReturnType<typeof vi.fn<OrderApi[K]>>;
   };
+
   let orderApi: OrderApiMock;
 
   function draftOrder(): Order {
@@ -31,6 +37,7 @@ describe('App', () => {
     orderApi = {
       getOrder: vi.fn().mockResolvedValue(draftOrder()),
       placeOrder: vi.fn().mockResolvedValue(undefined),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await TestBed.configureTestingModule({

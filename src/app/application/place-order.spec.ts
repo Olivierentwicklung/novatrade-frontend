@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import { Order } from '../domain/order';
 import { OrderLine } from '../domain/order-line';
 import { placeOrder } from './place-order';
+import { OrderWriteApi } from './ports/order-write-api';
 
 describe('placeOrder', () => {
   it('should ask the order to place itself', async () => {
@@ -9,9 +10,8 @@ describe('placeOrder', () => {
 
     const placeSpy = vi.spyOn(order, 'place');
 
-    const orderApi = {
+    const orderApi: OrderWriteApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
-      getOrder: vi.fn(),
     };
 
     await placeOrder(order, orderApi);
@@ -25,6 +25,7 @@ describe('placeOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
       getOrder: vi.fn(),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await placeOrder(order, orderApi);
@@ -38,6 +39,7 @@ describe('placeOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockRejectedValue(new Error('Order placement rejected')),
       getOrder: vi.fn(),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await expect(placeOrder(order, orderApi)).rejects.toThrow('Order placement rejected');
@@ -51,6 +53,7 @@ describe('placeOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
       getOrder: vi.fn(),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await placeOrder(order, orderApi);
