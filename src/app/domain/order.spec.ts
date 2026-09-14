@@ -32,4 +32,12 @@ describe('Order', () => {
 
     expect(order.status).toBe('Cancelled');
   });
+
+  it('should cancel a submitted order', () => {
+    const order = new Order('ORD-1001', 'Submitted', [new OrderLine('Test Product', 1, 20)], 20);
+
+    order.cancel();
+
+    expect(order.status).toBe('Cancelled');
+  });
 });
