@@ -1,14 +1,5 @@
-export interface OrderSummary {
-  id: string;
-  status: string;
-  total: number;
-  itemCount: number;
-}
+import { OrderApi, OrderSummary } from './ports/order-api';
 
-interface OrderListApi {
-  listOrders(): Promise<OrderSummary[]>;
-}
-
-export async function listOrders(orderApi: OrderListApi): Promise<OrderSummary[]> {
+export async function listOrders(orderApi: OrderApi): Promise<OrderSummary[]> {
   return orderApi.listOrders();
 }

@@ -12,6 +12,7 @@ describe('placeOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
       getOrder: vi.fn(),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await placeOrder(order, orderApi);
@@ -25,6 +26,7 @@ describe('placeOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
       getOrder: vi.fn(),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await placeOrder(order, orderApi);
@@ -38,6 +40,7 @@ describe('placeOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockRejectedValue(new Error('Order placement rejected')),
       getOrder: vi.fn(),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await expect(placeOrder(order, orderApi)).rejects.toThrow('Order placement rejected');
@@ -51,6 +54,7 @@ describe('placeOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
       getOrder: vi.fn(),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await placeOrder(order, orderApi);

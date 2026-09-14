@@ -1,4 +1,4 @@
-import { OrderApi } from '../../application/ports/order-api';
+import { OrderApi, OrderSummary } from '../../application/ports/order-api';
 import { Order } from '../../domain/order';
 
 export class InMemoryOrderApi implements OrderApi {
@@ -10,5 +10,9 @@ export class InMemoryOrderApi implements OrderApi {
 
   async getOrder(orderId: string): Promise<Order> {
     throw new Error('Not implemented');
+  }
+
+  async listOrders(): Promise<OrderSummary[]> {
+    throw new Error('Method not implemented.');
   }
 }

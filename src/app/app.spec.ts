@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { provideRouter } from '@angular/router';
 
 import { App } from './app';
-import { OrderApi } from './application/ports/order-api';
+import { OrderApi, OrderSummary } from './application/ports/order-api';
 import { ORDER_API } from './application/ports/order-api.token';
 import { Order } from './domain/order';
 import { OrderLine } from './domain/order-line';
@@ -15,6 +15,7 @@ describe('App', () => {
   type OrderApiMock = {
     getOrder: ReturnType<typeof vi.fn<(orderId: string) => Promise<Order>>>;
     placeOrder: ReturnType<typeof vi.fn<(orderId: string) => Promise<void>>>;
+    listOrders: ReturnType<typeof vi.fn<() => Promise<OrderSummary[]>>>;
   };
   let orderApi: OrderApiMock;
 
@@ -31,6 +32,7 @@ describe('App', () => {
     orderApi = {
       getOrder: vi.fn().mockResolvedValue(draftOrder()),
       placeOrder: vi.fn().mockResolvedValue(undefined),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await TestBed.configureTestingModule({

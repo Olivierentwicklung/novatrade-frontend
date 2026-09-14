@@ -15,6 +15,7 @@ describe('loadOrder', () => {
     const orderApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
       getOrder: vi.fn().mockResolvedValue(expectedOrder),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     const order = await loadOrder('ORD-1001', orderApi);

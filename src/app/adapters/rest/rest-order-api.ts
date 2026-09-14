@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { OrderApi } from '../../application/ports/order-api';
+import { OrderApi, OrderSummary } from '../../application/ports/order-api';
 import { Order } from '../../domain/order';
 import { OrderLine } from '../../domain/order-line';
 import { OrderDto } from './order-dto';
@@ -38,5 +38,9 @@ export class RestOrderApi implements OrderApi {
       data.lines.map((line) => new OrderLine(line.product_name, line.quantity, line.unit_price)),
       data.total,
     );
+  }
+
+  async listOrders(): Promise<OrderSummary[]> {
+    throw new Error('Method not implemented.');
   }
 }

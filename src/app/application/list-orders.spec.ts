@@ -1,10 +1,11 @@
 import { vi } from 'vitest';
 
 import { listOrders } from './list-orders';
+import { OrderApi, OrderSummary } from './ports/order-api';
 
 describe('listOrders', () => {
   it('should load compact order summaries through the order api', async () => {
-    const expectedOrders = [
+    const expectedOrders: OrderSummary[] = [
       {
         id: 'ORD-1001',
         status: 'Submitted',
@@ -19,7 +20,7 @@ describe('listOrders', () => {
       },
     ];
 
-    const orderApi = {
+    const orderApi: OrderApi = {
       getOrder: vi.fn(),
       placeOrder: vi.fn(),
       listOrders: vi.fn().mockResolvedValue(expectedOrders),
