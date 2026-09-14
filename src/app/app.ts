@@ -13,6 +13,7 @@ import { OrderPlacementRejected } from './application/errors/order-placement-rej
 
 import { listOrders } from './application/list-orders';
 import { OrderSummary } from './application/ports/order-read-api';
+import { cancelOrder } from './application/cancel-order';
 
 interface CheckoutDetails {
   email: string;
@@ -123,6 +124,20 @@ export class App implements OnInit {
     } finally {
       this.placementInProgress.set(false);
     }
+  }
+
+  async cancelCurrentOrder(): Promise<void> {
+    const order = this.order();
+
+    if (!order) {
+      return;
+    }
+
+    await cancelOrder(order, this.orderApi);
+
+    const authoritativeOrder = await loadOrder(order.id, this.orderApi);
+
+    this.order.set(authoritativeOrder);
   }
 
   private restoreStepFromLocation(): void {

@@ -37,6 +37,7 @@ describe('App', () => {
     orderApi = {
       getOrder: vi.fn().mockResolvedValue(draftOrder()),
       placeOrder: vi.fn().mockResolvedValue(undefined),
+      cancelOrder: vi.fn().mockResolvedValue(undefined),
       listOrders: vi.fn().mockResolvedValue([]),
     };
 
