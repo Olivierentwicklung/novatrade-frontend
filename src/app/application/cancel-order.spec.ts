@@ -17,4 +17,18 @@ describe('cancelOrder', () => {
 
     expect(orderApi.cancelOrder).toHaveBeenCalledWith('ORD-1001');
   });
+
+  it('should ask the order to cancel itself', async () => {
+    const order = new Order('ORD-1001', 'Submitted', [new OrderLine('Test Product', 1, 20)], 20);
+
+    const cancelSpy = vi.spyOn(order, 'cancel');
+
+    const orderApi: CancelOrderApi = {
+      cancelOrder: vi.fn().mockResolvedValue(undefined),
+    };
+
+    await cancelOrder(order, orderApi);
+
+    expect(cancelSpy).toHaveBeenCalledOnce();
+  });
 });
