@@ -1,6 +1,6 @@
 import { Order } from '../domain/order';
-import { OrderApi } from './ports/order-api';
+import { OrderReadApi } from './ports/order-read-api';
 
-export async function loadOrder(orderId: string, orderApi: OrderApi): Promise<Order> {
+export async function loadOrder(orderId: string, orderApi: OrderReadApi): Promise<Order> {
   return orderApi.getOrder(orderId);
 }
