@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import { Order } from '../domain/order';
 import { OrderLine } from '../domain/order-line';
 import { placeOrder } from './place-order';
+import { OrderWriteApi } from './ports/order-write-api';
 
 describe('placeOrder', () => {
   it('should ask the order to place itself', async () => {
@@ -9,10 +10,8 @@ describe('placeOrder', () => {
 
     const placeSpy = vi.spyOn(order, 'place');
 
-    const orderApi = {
+    const orderApi: OrderWriteApi = {
       placeOrder: vi.fn().mockResolvedValue(undefined),
-      getOrder: vi.fn(),
-      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await placeOrder(order, orderApi);
