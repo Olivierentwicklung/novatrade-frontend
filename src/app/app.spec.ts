@@ -535,4 +535,43 @@ describe('App', () => {
 
     expect(component.order()?.status).toBe('Cancelled');
   });
+
+  it('should display the first order from the order list', async () => {
+    orderApi.listOrders.mockResolvedValue([
+      {
+        id: 'ORD-2001',
+        status: 'Draft',
+        total: 79.99,
+        itemCount: 1,
+      },
+      {
+        id: 'ORD-2002',
+        status: 'Submitted',
+        total: 129.99,
+        itemCount: 1,
+      },
+    ]);
+
+    orderApi.getOrder.mockImplementation(async (orderId) => {
+      if (orderId === 'ORD-2001') {
+        return new Order('ORD-2001', 'Draft', [new OrderLine('USB-C Hub', 1, 79.99)], 79.99);
+      }
+
+      throw new Error(`Unexpected order id: ${orderId}`);
+    });
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(orderApi.getOrder).toHaveBeenCalledWith('ORD-2001');
+    expect(fixture.componentInstance.order()?.id).toBe('ORD-2001');
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('USB-C Hub');
+  });
 });
