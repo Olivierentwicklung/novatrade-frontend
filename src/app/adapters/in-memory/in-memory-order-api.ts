@@ -4,9 +4,14 @@ import { Order } from '../../domain/order';
 
 export class InMemoryOrderApi implements OrderApi {
   readonly placedOrderIds: string[] = [];
+  readonly cancelledOrderIds: string[] = [];
 
   async placeOrder(orderId: string): Promise<void> {
     this.placedOrderIds.push(orderId);
+  }
+
+  async cancelOrder(orderId: string): Promise<void> {
+    this.cancelledOrderIds.push(orderId);
   }
 
   async getOrder(orderId: string): Promise<Order> {
