@@ -1,13 +1,4 @@
-import { Order } from '../../domain/order';
-export interface OrderSummary {
-  id: string;
-  status: string;
-  total: number;
-  itemCount: number;
-}
+import { OrderReadApi } from './order-read-api';
+import { OrderWriteApi } from './order-write-api';
 
-export interface OrderApi {
-  placeOrder(orderId: string): Promise<void>;
-  getOrder(orderId: string): Promise<Order>;
-  listOrders(): Promise<OrderSummary[]>;
-}
+export interface OrderApi extends OrderReadApi, OrderWriteApi {}

@@ -4,7 +4,8 @@ import { Location } from '@angular/common';
 import { provideRouter } from '@angular/router';
 
 import { App } from './app';
-import { OrderApi, OrderSummary } from './application/ports/order-api';
+import { OrderApi } from './application/ports/order-api';
+import { OrderSummary } from './application/ports/order-read-api';
 import { ORDER_API } from './application/ports/order-api.token';
 import { Order } from './domain/order';
 import { OrderLine } from './domain/order-line';

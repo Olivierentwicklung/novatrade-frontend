@@ -1,4 +1,5 @@
-import { OrderApi, OrderSummary } from '../../application/ports/order-api';
+import { OrderApi } from '../../application/ports/order-api';
+import { OrderSummary } from '../../application/ports/order-read-api';
 import { Order } from '../../domain/order';
 
 export class InMemoryOrderApi implements OrderApi {
