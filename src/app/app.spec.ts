@@ -487,4 +487,18 @@ describe('App', () => {
     expect(compiled.textContent).toContain('99.98');
     expect(compiled.textContent).toContain('2 items');
   });
+
+  it('should offer cancellation for a submitted order', () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.componentInstance.order.set(
+      new Order('ORD-1001', 'Submitted', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
+    );
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('[aria-label="Cancel order"]')).toBeTruthy();
+  });
 });
