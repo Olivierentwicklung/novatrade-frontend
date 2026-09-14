@@ -148,4 +148,9 @@ export class App implements OnInit {
   private restoreStepFromLocation(): void {
     this.step.set(this.location.path() === '/checkout/review' ? 'review' : 'edit');
   }
+
+  async selectOrder(orderId: string): Promise<void> {
+    const order = await loadOrder(orderId, this.orderApi);
+    this.order.set(order);
+  }
 }

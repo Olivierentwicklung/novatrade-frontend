@@ -178,7 +178,12 @@
 
             <div class="mt-5 max-h-80 space-y-2 overflow-y-auto pr-1">
               @for (orderSummary of orders(); track orderSummary.id) {
-                <article class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <button
+                  type="button"
+                  [attr.data-order-id]="orderSummary.id"
+                  (click)="selectOrder(orderSummary.id)"
+                  class="block w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-left transition hover:border-slate-300 hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-900/10"
+                >
                   <div class="flex items-start justify-between gap-4">
                     <div class="min-w-0">
                       <p class="truncate font-semibold text-slate-950">
@@ -201,7 +206,7 @@
                   <p class="mt-2 text-sm font-semibold text-slate-800">
                     {{ orderSummary.total }}
                   </p>
-                </article>
+                </button>
               } @empty {
                 <p class="py-4 text-sm text-slate-500">No previous orders yet.</p>
               }
