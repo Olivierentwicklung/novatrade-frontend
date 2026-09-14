@@ -501,4 +501,37 @@ describe('App', () => {
 
     expect(compiled.querySelector('[aria-label="Cancel order"]')).toBeTruthy();
   });
+
+  it('should cancel the submitted order and reload the authoritative state', async () => {
+    const fixture = TestBed.createComponent(App);
+    const component = fixture.componentInstance;
+
+    component.order.set(
+      new Order('ORD-1001', 'Submitted', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
+    );
+
+    orderApi.cancelOrder = vi.fn().mockResolvedValue(undefined);
+
+    orderApi.getOrder.mockResolvedValue(
+      new Order('ORD-1001', 'Cancelled', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
+    );
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    const cancelButton = compiled.querySelector('[aria-label="Cancel order"]') as HTMLButtonElement;
+
+    cancelButton.click();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(orderApi.cancelOrder).toHaveBeenCalledOnce();
+    expect(orderApi.cancelOrder).toHaveBeenCalledWith('ORD-1001');
+
+    expect(orderApi.getOrder).toHaveBeenCalledWith('ORD-1001');
+
+    expect(component.order()?.status).toBe('Cancelled');
+  });
 });
