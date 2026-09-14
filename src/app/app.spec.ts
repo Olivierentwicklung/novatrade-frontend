@@ -468,7 +468,11 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
 
     fixture.detectChanges();
-    await fixture.whenStable();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.orders()).toHaveLength(2);
+    });
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
