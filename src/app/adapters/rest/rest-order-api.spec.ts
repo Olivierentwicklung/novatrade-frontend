@@ -140,4 +140,16 @@ describe('RestOrderApi', () => {
       },
     ]);
   });
+
+  it('should send an order cancellation request to the backend', async () => {
+    const cancellationPromise = orderApi.cancelOrder('ORD-1001');
+
+    const request = httpTesting.expectOne(`${environment.apiBaseUrl}/orders/ORD-1001/cancel`);
+
+    expect(request.request.method).toBe('POST');
+
+    request.flush(null);
+
+    await cancellationPromise;
+  });
 });

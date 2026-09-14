@@ -1,7 +1,7 @@
 import { Order } from '../domain/order';
-import { OrderWriteApi } from './ports/order-write-api';
+import { PlaceOrderApi } from './ports/place-order-api';
 
-export async function placeOrder(order: Order, orderApi: OrderWriteApi): Promise<void> {
+export async function placeOrder(order: Order, orderApi: PlaceOrderApi): Promise<void> {
   if (!order.canBePlaced()) {
     return;
   }

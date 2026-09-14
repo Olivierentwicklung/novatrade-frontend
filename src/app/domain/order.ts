@@ -23,4 +23,12 @@ export class Order {
 
     this.status = 'Submitted';
   }
+
+  cancel(): void {
+    if (this.status !== 'Submitted') {
+      return;
+    }
+
+    this.status = 'Cancelled';
+  }
 }

@@ -93,6 +93,37 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    const cancellationMatch = pathname.match(/^\/orders\/([^/]+)\/cancel$/);
+
+    if (request.method === 'POST' && cancellationMatch) {
+      const orderId = cancellationMatch[1];
+
+      const db = await readDb();
+
+      const order = db.orders.find((candidate) => candidate.id === orderId);
+
+      if (!order) {
+        sendJson(response, 404, {
+          error: 'Order not found',
+        });
+        return;
+      }
+
+      if (order.status !== 'Submitted') {
+        sendJson(response, 409, {
+          error: 'Only submitted orders can be cancelled',
+        });
+        return;
+      }
+
+      order.status = 'Cancelled';
+
+      await writeDb(db);
+
+      sendEmpty(response, 204);
+      return;
+    }
+
     sendJson(response, 404, {
       error: 'Route not found',
     });
