@@ -53,4 +53,10 @@ export class RestOrderApi implements OrderApi {
       itemCount: order.lines.length,
     }));
   }
+
+  async cancelOrder(orderId: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post<void>(`${environment.apiBaseUrl}/orders/${orderId}/cancel`, {}),
+    );
+  }
 }
