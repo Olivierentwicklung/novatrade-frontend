@@ -63,26 +63,9 @@ export class App implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.restoreStepFromLocation();
+    this.subscribeToLocationChanges();
 
-    const locationSubscription = this.location.subscribe(() => {
-      this.restoreStepFromLocation();
-    });
-
-    this.destroyRef.onDestroy(() => {
-      locationSubscription.unsubscribe();
-    });
-
-    const orders = await listOrders(this.orderApi);
-
-    this.orders.set(orders);
-    this.ordersLoaded.set(true);
-
-    const firstOrder = orders[0];
-
-    if (firstOrder) {
-      const order = await loadOrder(firstOrder.id, this.orderApi);
-      this.order.set(order);
-    }
+    await this.loadInitialOrder();
   }
 
   reviewOrder() {
@@ -146,12 +129,38 @@ export class App implements OnInit {
     this.order.set(authoritativeOrder);
   }
 
+  async selectOrder(orderId: string): Promise<void> {
+    const order = await loadOrder(orderId, this.orderApi);
+    this.order.set(order);
+  }
+
   private restoreStepFromLocation(): void {
     this.step.set(this.location.path() === '/checkout/review' ? 'review' : 'edit');
   }
 
-  async selectOrder(orderId: string): Promise<void> {
-    const order = await loadOrder(orderId, this.orderApi);
+  private subscribeToLocationChanges(): void {
+    const locationSubscription = this.location.subscribe(() => {
+      this.restoreStepFromLocation();
+    });
+
+    this.destroyRef.onDestroy(() => {
+      locationSubscription.unsubscribe();
+    });
+  }
+  private async loadInitialOrder(): Promise<void> {
+    const orders = await listOrders(this.orderApi);
+
+    this.orders.set(orders);
+    this.ordersLoaded.set(true);
+
+    const firstOrder = orders[0];
+
+    if (!firstOrder) {
+      return;
+    }
+
+    const order = await loadOrder(firstOrder.id, this.orderApi);
+
     this.order.set(order);
   }
 }
