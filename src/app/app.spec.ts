@@ -448,4 +448,43 @@ describe('App', () => {
 
     expect(compiled.querySelector('[aria-label="Remove Mechanical Keyboard"]')).toBeNull();
   });
+
+  it('should show the customer a list of order summaries', async () => {
+    orderApi.listOrders.mockResolvedValue([
+      {
+        id: 'ORD-1001',
+        status: 'Submitted',
+        total: 129.99,
+        itemCount: 1,
+      },
+      {
+        id: 'ORD-1002',
+        status: 'Draft',
+        total: 99.98,
+        itemCount: 2,
+      },
+    ]);
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.orders()).toHaveLength(2);
+    });
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.textContent).toContain('ORD-1001');
+    expect(compiled.textContent).toContain('Submitted');
+    expect(compiled.textContent).toContain('129.99');
+    expect(compiled.textContent).toContain('1 item');
+
+    expect(compiled.textContent).toContain('ORD-1002');
+    expect(compiled.textContent).toContain('Draft');
+    expect(compiled.textContent).toContain('99.98');
+    expect(compiled.textContent).toContain('2 items');
+  });
 });

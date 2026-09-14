@@ -11,6 +11,9 @@ import { OrderReview } from './order-review/order-review';
 import { ORDER_API } from './application/ports/order-api.token';
 import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
 
+import { listOrders } from './application/list-orders';
+import { OrderSummary } from './application/ports/order-read-api';
+
 interface CheckoutDetails {
   email: string;
   deliveryAddress: string;
@@ -27,6 +30,8 @@ export class App implements OnInit {
 
   readonly step = signal<'edit' | 'review'>('edit');
   readonly order = signal<Order | null>(null);
+  readonly orders = signal<OrderSummary[]>([]);
+
   readonly placementError = signal<string | null>(null);
 
   readonly placementInProgress = signal(false);
@@ -64,9 +69,13 @@ export class App implements OnInit {
       locationSubscription.unsubscribe();
     });
 
-    const order = await loadOrder('ORD-1001', this.orderApi);
+    const [order, orders] = await Promise.all([
+      loadOrder('ORD-1001', this.orderApi),
+      listOrders(this.orderApi),
+    ]);
 
     this.order.set(order);
+    this.orders.set(orders);
   }
 
   reviewOrder() {

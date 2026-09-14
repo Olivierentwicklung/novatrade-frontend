@@ -42,6 +42,15 @@ export class RestOrderApi implements OrderApi {
   }
 
   async listOrders(): Promise<OrderSummary[]> {
-    throw new Error('Method not implemented.');
+    const data = await firstValueFrom(
+      this.http.get<OrderDto[]>(`${environment.apiBaseUrl}/orders`),
+    );
+
+    return data.map((order) => ({
+      id: order.id,
+      status: order.status,
+      total: order.total,
+      itemCount: order.lines.length,
+    }));
   }
 }
