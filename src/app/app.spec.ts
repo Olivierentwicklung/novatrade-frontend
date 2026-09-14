@@ -33,19 +33,25 @@ describe('App', () => {
     );
   }
 
+  function arrangeDraftOrder(): void {
+    orderApi.listOrders.mockResolvedValue([
+      {
+        id: 'ORD-1001',
+        status: 'Draft',
+        total: 129.99,
+        itemCount: 1,
+      },
+    ]);
+
+    orderApi.getOrder.mockResolvedValue(draftOrder());
+  }
+
   beforeEach(async () => {
     orderApi = {
       getOrder: vi.fn().mockResolvedValue(draftOrder()),
       placeOrder: vi.fn().mockResolvedValue(undefined),
       cancelOrder: vi.fn().mockResolvedValue(undefined),
-      listOrders: vi.fn().mockResolvedValue([
-        {
-          id: 'ORD-1001',
-          status: 'Draft',
-          total: 129.99,
-          itemCount: 1,
-        },
-      ]),
+      listOrders: vi.fn().mockResolvedValue([]),
     };
 
     await TestBed.configureTestingModule({
@@ -204,11 +210,16 @@ describe('App', () => {
   });
 
   it('should continue to review after entering valid checkout details', async () => {
+    arrangeDraftOrder();
+
     const fixture = TestBed.createComponent(App);
 
     fixture.detectChanges();
 
-    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.order()?.status).toBe('Draft');
+    });
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -284,6 +295,8 @@ describe('App', () => {
   });
 
   it('should only offer order placement from the review step', async () => {
+    arrangeDraftOrder();
+
     const fixture = TestBed.createComponent(App);
 
     fixture.componentInstance.checkoutModel.set({
@@ -292,7 +305,11 @@ describe('App', () => {
     });
 
     fixture.detectChanges();
-    await fixture.whenStable();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.order()?.status).toBe('Draft');
+    });
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -350,6 +367,8 @@ describe('App', () => {
   });
 
   it('should represent the review step in navigation', async () => {
+    arrangeDraftOrder();
+
     const fixture = TestBed.createComponent(App);
 
     fixture.componentInstance.checkoutModel.set({
@@ -358,7 +377,11 @@ describe('App', () => {
     });
 
     fixture.detectChanges();
-    await fixture.whenStable();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.order()?.status).toBe('Draft');
+    });
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -376,6 +399,8 @@ describe('App', () => {
   });
 
   it('should return to editing when navigating back from review', async () => {
+    arrangeDraftOrder();
+
     const fixture = TestBed.createComponent(App);
 
     fixture.componentInstance.checkoutModel.set({
@@ -384,7 +409,11 @@ describe('App', () => {
     });
 
     fixture.detectChanges();
-    await fixture.whenStable();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.order()?.status).toBe('Draft');
+    });
+
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -676,5 +705,37 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(compiled.textContent).toContain('Mechanical Keyboard');
+  });
+
+  it('should not show checkout controls for a submitted order', async () => {
+    orderApi.listOrders.mockResolvedValue([
+      {
+        id: 'ORD-2001',
+        status: 'Submitted',
+        total: 129.99,
+        itemCount: 1,
+      },
+    ]);
+
+    orderApi.getOrder.mockResolvedValue(
+      new Order('ORD-2001', 'Submitted', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
+    );
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.order()?.status).toBe('Submitted');
+    });
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('#checkout-email')).toBeNull();
+    expect(compiled.querySelector('#delivery-address')).toBeNull();
+    expect(compiled.querySelector('[aria-label="Review order"]')).toBeNull();
+    expect(compiled.textContent).not.toContain('Your order is not placed yet.');
   });
 });

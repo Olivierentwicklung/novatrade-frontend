@@ -214,148 +214,158 @@
           </section>
 
           <!-- Checkout details -->
-          <section
-            class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-8"
-            aria-labelledby="checkout-details-heading"
-          >
-            <div class="border-b border-slate-100 pb-5">
-              <p class="text-sm font-medium text-slate-500">Delivery information</p>
+          @if (order(); as currentOrder) {
+            @if (currentOrder.status === 'Draft') {
+              <section
+                class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-8"
+                aria-labelledby="checkout-details-heading"
+              >
+                <div class="border-b border-slate-100 pb-5">
+                  <p class="text-sm font-medium text-slate-500">Delivery information</p>
 
-              <h2 id="checkout-details-heading" class="mt-1 text-xl font-bold text-slate-950">
-                Checkout details
-              </h2>
+                  <h2 id="checkout-details-heading" class="mt-1 text-xl font-bold text-slate-950">
+                    Checkout details
+                  </h2>
 
-              <p class="mt-2 text-sm leading-6 text-slate-600">
-                We need these details before you can review your order.
-              </p>
-            </div>
-
-            <div class="mt-6 space-y-6">
-              <div>
-                <label for="checkout-email" class="mb-2 block text-sm font-semibold text-slate-800">
-                  Email address
-                </label>
-
-                <input
-                  id="checkout-email"
-                  type="email"
-                  autocomplete="email"
-                  placeholder="you@example.com"
-                  [formField]="checkoutForm.email"
-                  [attr.aria-invalid]="
-                    checkoutForm.email().touched() && checkoutForm.email().invalid() ? 'true' : null
-                  "
-                  [attr.aria-describedby]="
-                    checkoutForm.email().touched() && checkoutForm.email().invalid()
-                      ? 'checkout-email-error'
-                      : null
-                  "
-                  [class.border-red-400]="
-                    checkoutForm.email().touched() && checkoutForm.email().invalid()
-                  "
-                  [class.focus:border-red-500]="
-                    checkoutForm.email().touched() && checkoutForm.email().invalid()
-                  "
-                  class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5"
-                />
-
-                @if (checkoutForm.email().touched() && checkoutForm.email().invalid()) {
-                  <div
-                    id="checkout-email-error"
-                    class="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"
-                    role="alert"
-                  >
-                    @for (error of checkoutForm.email().errors(); track error.kind) {
-                      <p>{{ error.message }}</p>
-                    }
-                  </div>
-                }
-              </div>
-
-              <div>
-                <label
-                  for="delivery-address"
-                  class="mb-2 block text-sm font-semibold text-slate-800"
-                >
-                  Delivery address
-                </label>
-
-                <input
-                  id="delivery-address"
-                  type="text"
-                  autocomplete="street-address"
-                  placeholder="Example Street 10"
-                  [formField]="checkoutForm.deliveryAddress"
-                  [attr.aria-invalid]="
-                    checkoutForm.deliveryAddress().touched() &&
-                    checkoutForm.deliveryAddress().invalid()
-                      ? 'true'
-                      : null
-                  "
-                  [attr.aria-describedby]="
-                    checkoutForm.deliveryAddress().touched() &&
-                    checkoutForm.deliveryAddress().invalid()
-                      ? 'delivery-address-error'
-                      : null
-                  "
-                  [class.border-red-400]="
-                    checkoutForm.deliveryAddress().touched() &&
-                    checkoutForm.deliveryAddress().invalid()
-                  "
-                  [class.focus:border-red-500]="
-                    checkoutForm.deliveryAddress().touched() &&
-                    checkoutForm.deliveryAddress().invalid()
-                  "
-                  class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5"
-                />
-
-                @if (
-                  checkoutForm.deliveryAddress().touched() &&
-                  checkoutForm.deliveryAddress().invalid()
-                ) {
-                  <div
-                    id="delivery-address-error"
-                    class="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"
-                    role="alert"
-                  >
-                    @for (error of checkoutForm.deliveryAddress().errors(); track error.kind) {
-                      <p>{{ error.message }}</p>
-                    }
-                  </div>
-                }
-              </div>
-            </div>
-
-            <div class="mt-8 rounded-2xl bg-slate-50 p-4">
-              <div class="flex gap-3">
-                <div
-                  class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm"
-                  aria-hidden="true"
-                >
-                  ✓
+                  <p class="mt-2 text-sm leading-6 text-slate-600">
+                    We need these details before you can review your order.
+                  </p>
                 </div>
 
-                <p class="text-sm leading-6 text-slate-600">
-                  You can still return from the review step and change your order before placing it.
+                <div class="mt-6 space-y-6">
+                  <div>
+                    <label
+                      for="checkout-email"
+                      class="mb-2 block text-sm font-semibold text-slate-800"
+                    >
+                      Email address
+                    </label>
+
+                    <input
+                      id="checkout-email"
+                      type="email"
+                      autocomplete="email"
+                      placeholder="you@example.com"
+                      [formField]="checkoutForm.email"
+                      [attr.aria-invalid]="
+                        checkoutForm.email().touched() && checkoutForm.email().invalid()
+                          ? 'true'
+                          : null
+                      "
+                      [attr.aria-describedby]="
+                        checkoutForm.email().touched() && checkoutForm.email().invalid()
+                          ? 'checkout-email-error'
+                          : null
+                      "
+                      [class.border-red-400]="
+                        checkoutForm.email().touched() && checkoutForm.email().invalid()
+                      "
+                      [class.focus:border-red-500]="
+                        checkoutForm.email().touched() && checkoutForm.email().invalid()
+                      "
+                      class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5"
+                    />
+
+                    @if (checkoutForm.email().touched() && checkoutForm.email().invalid()) {
+                      <div
+                        id="checkout-email-error"
+                        class="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"
+                        role="alert"
+                      >
+                        @for (error of checkoutForm.email().errors(); track error.kind) {
+                          <p>{{ error.message }}</p>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <div>
+                    <label
+                      for="delivery-address"
+                      class="mb-2 block text-sm font-semibold text-slate-800"
+                    >
+                      Delivery address
+                    </label>
+
+                    <input
+                      id="delivery-address"
+                      type="text"
+                      autocomplete="street-address"
+                      placeholder="Example Street 10"
+                      [formField]="checkoutForm.deliveryAddress"
+                      [attr.aria-invalid]="
+                        checkoutForm.deliveryAddress().touched() &&
+                        checkoutForm.deliveryAddress().invalid()
+                          ? 'true'
+                          : null
+                      "
+                      [attr.aria-describedby]="
+                        checkoutForm.deliveryAddress().touched() &&
+                        checkoutForm.deliveryAddress().invalid()
+                          ? 'delivery-address-error'
+                          : null
+                      "
+                      [class.border-red-400]="
+                        checkoutForm.deliveryAddress().touched() &&
+                        checkoutForm.deliveryAddress().invalid()
+                      "
+                      [class.focus:border-red-500]="
+                        checkoutForm.deliveryAddress().touched() &&
+                        checkoutForm.deliveryAddress().invalid()
+                      "
+                      class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5"
+                    />
+
+                    @if (
+                      checkoutForm.deliveryAddress().touched() &&
+                      checkoutForm.deliveryAddress().invalid()
+                    ) {
+                      <div
+                        id="delivery-address-error"
+                        class="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"
+                        role="alert"
+                      >
+                        @for (error of checkoutForm.deliveryAddress().errors(); track error.kind) {
+                          <p>{{ error.message }}</p>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <div class="mt-8 rounded-2xl bg-slate-50 p-4">
+                  <div class="flex gap-3">
+                    <div
+                      class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm"
+                      aria-hidden="true"
+                    >
+                      ✓
+                    </div>
+
+                    <p class="text-sm leading-6 text-slate-600">
+                      You can still return from the review step and change your order before placing
+                      it.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  aria-label="Review order"
+                  (click)="reviewOrder()"
+                  class="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-900/20"
+                >
+                  Continue to review
+
+                  <span aria-hidden="true">→</span>
+                </button>
+
+                <p class="mt-3 text-center text-xs leading-5 text-slate-500">
+                  Your order is not placed yet.
                 </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              aria-label="Review order"
-              (click)="reviewOrder()"
-              class="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-900/20"
-            >
-              Continue to review
-
-              <span aria-hidden="true">→</span>
-            </button>
-
-            <p class="mt-3 text-center text-xs leading-5 text-slate-500">
-              Your order is not placed yet.
-            </p>
-          </section>
+              </section>
+            }
+          }
         </aside>
       </div>
     </div>
