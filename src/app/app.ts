@@ -7,6 +7,7 @@ import { placeOrder } from './application/place-order';
 import { Order } from './domain/order';
 import { OrderEditor } from './order-editor/order-editor';
 import { OrderReview } from './order-review/order-review';
+import { OrderList } from './order-list/order-list';
 
 import { ORDER_API } from './application/ports/order-api.token';
 import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
@@ -22,7 +23,7 @@ interface CheckoutDetails {
 
 @Component({
   selector: 'app-root',
-  imports: [OrderEditor, OrderReview, FormField],
+  imports: [OrderEditor, OrderReview, OrderList, FormField],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
