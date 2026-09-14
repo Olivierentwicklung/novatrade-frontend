@@ -32,6 +32,7 @@ export class App implements OnInit {
   readonly step = signal<'edit' | 'review'>('edit');
   readonly order = signal<Order | null>(null);
   readonly orders = signal<OrderSummary[]>([]);
+  readonly ordersLoaded = signal(false);
 
   readonly placementError = signal<string | null>(null);
 
@@ -70,13 +71,17 @@ export class App implements OnInit {
       locationSubscription.unsubscribe();
     });
 
-    const [order, orders] = await Promise.all([
-      loadOrder('ORD-1001', this.orderApi),
-      listOrders(this.orderApi),
-    ]);
+    const orders = await listOrders(this.orderApi);
 
-    this.order.set(order);
     this.orders.set(orders);
+    this.ordersLoaded.set(true);
+
+    const firstOrder = orders[0];
+
+    if (firstOrder) {
+      const order = await loadOrder(firstOrder.id, this.orderApi);
+      this.order.set(order);
+    }
   }
 
   reviewOrder() {

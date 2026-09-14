@@ -38,7 +38,14 @@ describe('App', () => {
       getOrder: vi.fn().mockResolvedValue(draftOrder()),
       placeOrder: vi.fn().mockResolvedValue(undefined),
       cancelOrder: vi.fn().mockResolvedValue(undefined),
-      listOrders: vi.fn().mockResolvedValue([]),
+      listOrders: vi.fn().mockResolvedValue([
+        {
+          id: 'ORD-1001',
+          status: 'Draft',
+          total: 129.99,
+          itemCount: 1,
+        },
+      ]),
     };
 
     await TestBed.configureTestingModule({
@@ -564,14 +571,50 @@ describe('App', () => {
 
     fixture.detectChanges();
 
-    await fixture.whenStable();
-    fixture.detectChanges();
+    await vi.waitFor(() => {
+      expect(orderApi.getOrder).toHaveBeenCalledWith('ORD-2001');
+      expect(fixture.componentInstance.order()?.id).toBe('ORD-2001');
+    });
 
-    expect(orderApi.getOrder).toHaveBeenCalledWith('ORD-2001');
-    expect(fixture.componentInstance.order()?.id).toBe('ORD-2001');
+    fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(compiled.textContent).toContain('USB-C Hub');
+  });
+
+  it('should not load an order when the order list is empty', async () => {
+    orderApi.listOrders.mockResolvedValue([]);
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    await vi.waitFor(() => {
+      expect(orderApi.listOrders).toHaveBeenCalled();
+    });
+
+    expect(orderApi.getOrder).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.order()).toBeNull();
+  });
+
+  it('should show an empty state when there are no orders', async () => {
+    orderApi.listOrders.mockResolvedValue([]);
+
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    await vi.waitFor(() => {
+      expect(fixture.componentInstance.ordersLoaded()).toBe(true);
+    });
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(orderApi.getOrder).not.toHaveBeenCalled();
+    expect(compiled.textContent).toContain("You don't have any orders yet.");
+    expect(compiled.textContent).not.toContain('Loading order...');
   });
 });

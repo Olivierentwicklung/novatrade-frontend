@@ -145,6 +145,8 @@
               } @else {
                 <app-order-editor [order]="currentOrder" (orderChange)="order.set($event)" />
               }
+            } @else if (ordersLoaded() && orders().length === 0) {
+              <p class="p-6 text-slate-500">You don't have any orders yet.</p>
             } @else {
               <p class="p-6 text-slate-500">Loading order...</p>
             }
