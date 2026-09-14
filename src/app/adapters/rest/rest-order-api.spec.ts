@@ -85,4 +85,59 @@ describe('RestOrderApi', () => {
 
     await expect(placement).rejects.toThrow('Order placement rejected');
   });
+
+  it('should return compact order summaries from the backend', async () => {
+    const ordersPromise = orderApi.listOrders();
+
+    const request = httpTesting.expectOne(`${environment.apiBaseUrl}/orders`);
+
+    expect(request.request.method).toBe('GET');
+
+    request.flush([
+      {
+        id: 'ORD-1001',
+        status: 'Submitted',
+        lines: [
+          {
+            product_name: 'Mechanical Keyboard',
+            quantity: 1,
+            unit_price: 129.99,
+          },
+        ],
+        total: 129.99,
+      },
+      {
+        id: 'ORD-1002',
+        status: 'Draft',
+        lines: [
+          {
+            product_name: 'Wireless Mouse',
+            quantity: 2,
+            unit_price: 49.99,
+          },
+          {
+            product_name: 'USB-C Cable',
+            quantity: 1,
+            unit_price: 19.99,
+          },
+        ],
+        total: 119.97,
+      },
+    ]);
+
+    await expect(ordersPromise).resolves.toEqual([
+      {
+        id: 'ORD-1001',
+        status: 'Submitted',
+        total: 129.99,
+        itemCount: 1,
+      },
+      {
+        id: 'ORD-1002',
+        status: 'Draft',
+        total: 119.97,
+        itemCount: 2,
+      },
+    ]);
+  });
 });
