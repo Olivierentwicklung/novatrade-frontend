@@ -3,14 +3,13 @@ import { vi } from 'vitest';
 import { Order } from '../domain/order';
 import { OrderLine } from '../domain/order-line';
 import { cancelOrder } from './cancel-order';
-import { OrderWriteApi } from './ports/order-write-api';
+import { CancelOrderApi } from './ports/cancel-order-api';
 
 describe('cancelOrder', () => {
   it('should ask the order api to cancel a submitted order', async () => {
     const order = new Order('ORD-1001', 'Submitted', [new OrderLine('Test Product', 1, 20)], 20);
 
-    const orderApi: OrderWriteApi = {
-      placeOrder: vi.fn().mockResolvedValue(undefined),
+    const orderApi: CancelOrderApi = {
       cancelOrder: vi.fn().mockResolvedValue(undefined),
     };
 

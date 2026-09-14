@@ -1,3 +1,3 @@
-export interface OrderWriteApi {
-  placeOrder(orderId: string): Promise<void>;
-}
+import { PlaceOrderApi } from './place-order-api';
+
+export interface OrderWriteApi extends PlaceOrderApi {}
