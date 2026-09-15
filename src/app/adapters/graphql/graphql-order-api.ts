@@ -6,6 +6,8 @@ import { Order } from '../../domain/entities/order';
 import { OrderLine } from '../../domain/value-objects/order-line';
 import { OrderSummary } from '../../application/ports/order-read-api';
 
+import { OrderApi } from '../../application/ports/order-api';
+
 interface GraphqlOrderResponse {
   data: {
     order: {
@@ -22,7 +24,7 @@ interface GraphqlOrderResponse {
 }
 
 @Injectable()
-export class GraphqlOrderApi {
+export class GraphqlOrderApi implements OrderApi {
   constructor(private readonly http: HttpClient) {}
 
   async getOrder(orderId: string): Promise<Order> {
@@ -74,82 +76,34 @@ export class GraphqlOrderApi {
     return response.data.orders;
   }
 
-  async placeOrder(orderId: string): Promise<Order> {
-    const response = await firstValueFrom(
-      this.http.post<{
-        data: {
-          placeOrder: {
-            id: string;
-            status: string;
-            lines: {
-              productName: string;
-              quantity: number;
-              unitPrice: number;
-            }[];
-            total: number;
-          };
-        };
-      }>('/graphql', {
+  async placeOrder(orderId: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post('/graphql', {
         query: `
         mutation PlaceOrder($orderId: ID!) {
           placeOrder(id: $orderId) {
-            id
-            status
-            lines {
-              productName
-              quantity
-              unitPrice
-            }
-            total
+            success
           }
         }
       `,
-        variables: {
-          orderId,
-        },
+        variables: { orderId },
       }),
     );
-
-    return this.toOrder(response.data.placeOrder);
   }
 
-  async cancelOrder(orderId: string): Promise<Order> {
-    const response = await firstValueFrom(
-      this.http.post<{
-        data: {
-          cancelOrder: {
-            id: string;
-            status: string;
-            lines: {
-              productName: string;
-              quantity: number;
-              unitPrice: number;
-            }[];
-            total: number;
-          };
-        };
-      }>('/graphql', {
+  async cancelOrder(orderId: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post('/graphql', {
         query: `
         mutation CancelOrder($orderId: ID!) {
           cancelOrder(id: $orderId) {
-            id
-            status
-            lines {
-              productName
-              quantity
-              unitPrice
-            }
-            total
+            success
           }
         }
       `,
-        variables: {
-          orderId,
-        },
+        variables: { orderId },
       }),
     );
-
-    return this.toOrder(response.data.cancelOrder);
   }
 
   private toOrder(data: {
