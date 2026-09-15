@@ -113,6 +113,45 @@ export class GraphqlOrderApi {
     return this.toOrder(response.data.placeOrder);
   }
 
+  async cancelOrder(orderId: string): Promise<Order> {
+    const response = await firstValueFrom(
+      this.http.post<{
+        data: {
+          cancelOrder: {
+            id: string;
+            status: string;
+            lines: {
+              productName: string;
+              quantity: number;
+              unitPrice: number;
+            }[];
+            total: number;
+          };
+        };
+      }>('/graphql', {
+        query: `
+        mutation CancelOrder($orderId: ID!) {
+          cancelOrder(id: $orderId) {
+            id
+            status
+            lines {
+              productName
+              quantity
+              unitPrice
+            }
+            total
+          }
+        }
+      `,
+        variables: {
+          orderId,
+        },
+      }),
+    );
+
+    return this.toOrder(response.data.cancelOrder);
+  }
+
   private toOrder(data: {
     id: string;
     status: string;
