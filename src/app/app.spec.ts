@@ -7,9 +7,9 @@ import { App } from './app';
 import { OrderApi } from './application/ports/order-api';
 
 import { ORDER_API } from './application/ports/order-api.token';
-import { Order } from './domain/order';
-import { OrderLine } from './domain/order-line';
-import { OrderEditor } from './order-editor/order-editor';
+import { Order } from './domain/entities/order';
+import { OrderLine } from './domain/value-objects/order-line';
+import { OrderEditor } from './presentation/order-editor/order-editor';
 import { OrderPlacementRejected } from './application/errors/order-placement-rejected';
 
 describe('App', () => {

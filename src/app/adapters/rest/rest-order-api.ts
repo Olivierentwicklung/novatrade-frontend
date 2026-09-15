@@ -4,8 +4,8 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { OrderApi } from '../../application/ports/order-api';
-import { Order } from '../../domain/order';
-import { OrderLine } from '../../domain/order-line';
+import { Order } from '../../domain/entities/order';
+import { OrderLine } from '../../domain/value-objects/order-line';
 import { OrderDto } from './order-dto';
 import { OrderPlacementRejected } from '../../application/errors/order-placement-rejected';
 import { OrderSummary } from '../../application/ports/order-read-api';

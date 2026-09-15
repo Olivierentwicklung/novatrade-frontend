@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, vi } from 'vitest';
 
-import { Order } from '../domain/order';
-import { OrderLine } from '../domain/order-line';
+import { Order } from '../../domain/entities/order';
+import { OrderLine } from '../../domain/value-objects/order-line';
 import { OrderEditor } from './order-editor';
 
 describe('Order Editor', () => {

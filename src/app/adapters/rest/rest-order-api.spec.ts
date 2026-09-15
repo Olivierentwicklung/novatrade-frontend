@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { Order } from '../../domain/order';
-import { OrderLine } from '../../domain/order-line';
+import { Order } from '../../domain/entities/order';
+import { OrderLine } from '../../domain/value-objects/order-line';
 import { RestOrderApi } from './rest-order-api';
 import { environment } from '../../../environments/environment';
 

@@ -1,9 +1,9 @@
 import { vi } from 'vitest';
-import { Order } from '../domain/order';
-import { OrderLine } from '../domain/order-line';
+import { Order } from '../../domain/entities/order';
+import { OrderLine } from '../../domain/value-objects/order-line';
 import { placeOrder } from './place-order';
 
-import { PlaceOrderApi } from './ports/place-order-api';
+import { PlaceOrderApi } from '../ports/place-order-api';
 
 describe('placeOrder', () => {
   it('should ask the order to place itself', async () => {

@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 
-import { OrderSummary } from '../application/ports/order-read-api';
+import { OrderSummary } from '../../application/ports/order-read-api';
 
 @Component({
   selector: 'app-order-list',
