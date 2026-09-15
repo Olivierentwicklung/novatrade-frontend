@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { Order } from '../../domain/entities/order';
 import { OrderLine } from '../../domain/value-objects/order-line';
+import { OrderSummary } from '../../application/ports/order-read-api';
 
 interface GraphqlOrderResponse {
   data: {
@@ -55,5 +56,28 @@ export class GraphqlOrderApi {
       data.lines.map((line) => new OrderLine(line.productName, line.quantity, line.unitPrice)),
       data.total,
     );
+  }
+
+  async listOrders(): Promise<OrderSummary[]> {
+    const response = await firstValueFrom(
+      this.http.post<{
+        data: {
+          orders: OrderSummary[];
+        };
+      }>('/graphql', {
+        query: `
+        query Orders {
+          orders {
+            id
+            status
+            total
+            itemCount
+          }
+        }
+      `,
+      }),
+    );
+
+    return response.data.orders;
   }
 }
