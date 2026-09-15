@@ -48,14 +48,7 @@ export class GraphqlOrderApi {
       }),
     );
 
-    const data = response.data.order;
-
-    return new Order(
-      data.id,
-      data.status,
-      data.lines.map((line) => new OrderLine(line.productName, line.quantity, line.unitPrice)),
-      data.total,
-    );
+    return this.toOrder(response.data.order);
   }
 
   async listOrders(): Promise<OrderSummary[]> {
@@ -79,5 +72,62 @@ export class GraphqlOrderApi {
     );
 
     return response.data.orders;
+  }
+
+  async placeOrder(orderId: string): Promise<Order> {
+    const response = await firstValueFrom(
+      this.http.post<{
+        data: {
+          placeOrder: {
+            id: string;
+            status: string;
+            lines: {
+              productName: string;
+              quantity: number;
+              unitPrice: number;
+            }[];
+            total: number;
+          };
+        };
+      }>('/graphql', {
+        query: `
+        mutation PlaceOrder($orderId: ID!) {
+          placeOrder(id: $orderId) {
+            id
+            status
+            lines {
+              productName
+              quantity
+              unitPrice
+            }
+            total
+          }
+        }
+      `,
+        variables: {
+          orderId,
+        },
+      }),
+    );
+
+    return this.toOrder(response.data.placeOrder);
+  }
+
+  private toOrder(data: {
+    id: string;
+    status: string;
+    lines: {
+      productName: string;
+      quantity: number;
+      unitPrice: number;
+    }[];
+    total: number;
+  }): Order {
+    return new Order(
+      data.id,
+      data.status,
+      data.lines.map((line) => new OrderLine(line.productName, line.quantity, line.unitPrice)),
+      data.total,
+    );
   }
 }
