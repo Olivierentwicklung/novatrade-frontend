@@ -1,0 +1,304 @@
+{
+  "orders": [
+    {
+      "id": "ORD-1001",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "Mechanical Keyboard",
+          "quantity": 1,
+          "unit_price": 129.99
+        },
+        {
+          "product_name": "Wireless Mouse",
+          "quantity": 2,
+          "unit_price": 49.99
+        }
+      ],
+      "total": 229.97
+    },
+    {
+      "id": "ORD-1002",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "USB-C Hub",
+          "quantity": 1,
+          "unit_price": 69.99
+        },
+        {
+          "product_name": "USB-C Cable",
+          "quantity": 2,
+          "unit_price": 19.99
+        }
+      ],
+      "total": 109.97
+    },
+    {
+      "id": "ORD-1003",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Laptop Stand",
+          "quantity": 1,
+          "unit_price": 59.99
+        }
+      ],
+      "total": 59.99
+    },
+    {
+      "id": "ORD-1004",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "Webcam",
+          "quantity": 1,
+          "unit_price": 89.99
+        },
+        {
+          "product_name": "Desk Microphone",
+          "quantity": 1,
+          "unit_price": 119.99
+        }
+      ],
+      "total": 209.98
+    },
+    {
+      "id": "ORD-1005",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Monitor Arm",
+          "quantity": 2,
+          "unit_price": 79.99
+        }
+      ],
+      "total": 159.98
+    },
+    {
+      "id": "ORD-1006",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Desk Lamp",
+          "quantity": 1,
+          "unit_price": 44.99
+        },
+        {
+          "product_name": "USB-C Cable",
+          "quantity": 3,
+          "unit_price": 19.99
+        }
+      ],
+      "total": 104.96
+    },
+    {
+      "id": "ORD-1007",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "Noise Cancelling Headphones",
+          "quantity": 1,
+          "unit_price": 249.99
+        }
+      ],
+      "total": 249.99
+    },
+    {
+      "id": "ORD-1008",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Mechanical Keyboard",
+          "quantity": 1,
+          "unit_price": 129.99
+        },
+        {
+          "product_name": "Laptop Stand",
+          "quantity": 1,
+          "unit_price": 59.99
+        }
+      ],
+      "total": 189.98
+    },
+    {
+      "id": "ORD-1009",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Wireless Mouse",
+          "quantity": 1,
+          "unit_price": 49.99
+        }
+      ],
+      "total": 49.99
+    },
+    {
+      "id": "ORD-1010",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "4K Monitor",
+          "quantity": 1,
+          "unit_price": 399.99
+        },
+        {
+          "product_name": "DisplayPort Cable",
+          "quantity": 1,
+          "unit_price": 24.99
+        }
+      ],
+      "total": 424.98
+    },
+    {
+      "id": "ORD-1011",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "External SSD",
+          "quantity": 1,
+          "unit_price": 149.99
+        }
+      ],
+      "total": 149.99
+    },
+    {
+      "id": "ORD-1012",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "USB-C Dock",
+          "quantity": 1,
+          "unit_price": 179.99
+        },
+        {
+          "product_name": "USB-C Cable",
+          "quantity": 1,
+          "unit_price": 19.99
+        }
+      ],
+      "total": 199.98
+    },
+    {
+      "id": "ORD-1013",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "Ergonomic Mouse",
+          "quantity": 1,
+          "unit_price": 79.99
+        }
+      ],
+      "total": 79.99
+    },
+    {
+      "id": "ORD-1014",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Desk Mat",
+          "quantity": 1,
+          "unit_price": 29.99
+        },
+        {
+          "product_name": "Keyboard Wrist Rest",
+          "quantity": 1,
+          "unit_price": 24.99
+        }
+      ],
+      "total": 54.98
+    },
+    {
+      "id": "ORD-1015",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Portable Monitor",
+          "quantity": 1,
+          "unit_price": 229.99
+        }
+      ],
+      "total": 229.99
+    },
+    {
+      "id": "ORD-1016",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "Bluetooth Speaker",
+          "quantity": 1,
+          "unit_price": 89.99
+        },
+        {
+          "product_name": "USB-C Charger",
+          "quantity": 1,
+          "unit_price": 49.99
+        }
+      ],
+      "total": 139.98
+    },
+    {
+      "id": "ORD-1017",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Mechanical Keyboard",
+          "quantity": 1,
+          "unit_price": 129.99
+        }
+      ],
+      "total": 129.99
+    },
+    {
+      "id": "ORD-1018",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Wireless Mouse",
+          "quantity": 2,
+          "unit_price": 49.99
+        },
+        {
+          "product_name": "Desk Mat",
+          "quantity": 1,
+          "unit_price": 29.99
+        }
+      ],
+      "total": 129.97
+    },
+    {
+      "id": "ORD-1019",
+      "status": "Draft",
+      "lines": [
+        {
+          "product_name": "Webcam",
+          "quantity": 1,
+          "unit_price": 89.99
+        }
+      ],
+      "total": 89.99
+    },
+    {
+      "id": "ORD-1020",
+      "status": "Submitted",
+      "lines": [
+        {
+          "product_name": "Laptop Stand",
+          "quantity": 1,
+          "unit_price": 59.99
+        },
+        {
+          "product_name": "USB-C Hub",
+          "quantity": 1,
+          "unit_price": 69.99
+        },
+        {
+          "product_name": "USB-C Cable",
+          "quantity": 2,
+          "unit_price": 19.99
+        }
+      ],
+      "total": 169.96
+    }
+  ]
+}
