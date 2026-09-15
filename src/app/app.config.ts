@@ -10,12 +10,9 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(),
-
-    RestOrderApi,
-
     {
       provide: ORDER_API,
-      useExisting: RestOrderApi,
+      useClass: RestOrderApi,
     },
   ],
 };

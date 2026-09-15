@@ -5,9 +5,9 @@ import { Location } from '@angular/common';
 import { loadOrder } from '../../../../application/use-cases/load-order';
 import { placeOrder } from '../../../../application/use-cases/place-order';
 import { Order } from '../../../../domain/entities/order';
-import { OrderEditor } from '../../../../features/orders/presentation/order-editor/order-editor';
-import { OrderReview } from '../../../../features/orders/presentation/order-review/order-review';
-import { OrderList } from '../../../../features/orders/presentation/order-list/order-list';
+import { OrderEditor } from '../order-editor/order-editor';
+import { OrderReview } from '../order-review/order-review';
+import { OrderList } from '../order-list/order-list';
 
 import { ORDER_API } from '../../../../application/ports/order-api.token';
 import { OrderPlacementRejected } from '../../../../application/errors/order-placement-rejected';
