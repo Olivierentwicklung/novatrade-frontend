@@ -60,4 +60,49 @@ describe('GraphqlOrderApi', () => {
       new Order('ORD-1001', 'Draft', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
     );
   });
+
+  it('should return compact order summaries through GraphQL', async () => {
+    const ordersPromise = orderApi.listOrders();
+
+    const request = httpTesting.expectOne('/graphql');
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      query: expect.stringContaining('orders'),
+    });
+
+    request.flush({
+      data: {
+        orders: [
+          {
+            id: 'ORD-1001',
+            status: 'Submitted',
+            total: 129.99,
+            itemCount: 1,
+          },
+          {
+            id: 'ORD-1002',
+            status: 'Draft',
+            total: 119.97,
+            itemCount: 2,
+          },
+        ],
+      },
+    });
+
+    await expect(ordersPromise).resolves.toEqual([
+      {
+        id: 'ORD-1001',
+        status: 'Submitted',
+        total: 129.99,
+        itemCount: 1,
+      },
+      {
+        id: 'ORD-1002',
+        status: 'Draft',
+        total: 119.97,
+        itemCount: 2,
+      },
+    ]);
+  });
 });
