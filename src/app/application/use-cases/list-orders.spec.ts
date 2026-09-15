@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
 import { listOrders } from './list-orders';
-import { OrderReadApi, OrderSummary } from './ports/order-read-api';
+import { OrderReadApi, OrderSummary } from '../ports/order-read-api';
 
 describe('listOrders', () => {
   it('should load compact order summaries through the order api', async () => {

@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
-import { Order } from '../domain/order';
-import { OrderLine } from '../domain/order-line';
+import { Order } from '../../domain/entities/order';
+import { OrderLine } from '../../domain/value-objects/order-line';
 import { loadOrder } from './load-order';
-import { OrderReadApi } from './ports/order-read-api';
+import { OrderReadApi } from '../ports/order-read-api';
 
 describe('loadOrder', () => {
   it('should load an order through the order api', async () => {

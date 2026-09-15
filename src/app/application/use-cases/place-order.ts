@@ -1,5 +1,5 @@
-import { Order } from '../domain/order';
-import { PlaceOrderApi } from './ports/place-order-api';
+import { Order } from '../../domain/entities/order';
+import { PlaceOrderApi } from '../ports/place-order-api';
 
 export async function placeOrder(order: Order, orderApi: PlaceOrderApi): Promise<void> {
   if (!order.canBePlaced()) {

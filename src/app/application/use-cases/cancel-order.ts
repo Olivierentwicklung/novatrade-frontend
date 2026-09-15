@@ -1,5 +1,5 @@
-import { Order } from '../domain/order';
-import { CancelOrderApi } from './ports/cancel-order-api';
+import { Order } from '../../domain/entities/order';
+import { CancelOrderApi } from '../ports/cancel-order-api';
 
 export async function cancelOrder(order: Order, orderApi: CancelOrderApi): Promise<void> {
   await orderApi.cancelOrder(order.id);

@@ -1,5 +1,5 @@
 import { Order } from './order';
-import { OrderLine } from './order-line';
+import { OrderLine } from '../value-objects/order-line';
 
 describe('Order', () => {
   it('should recognize another representation with the same identity', () => {

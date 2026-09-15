@@ -1,9 +1,9 @@
 import { vi } from 'vitest';
 
-import { Order } from '../domain/order';
-import { OrderLine } from '../domain/order-line';
+import { Order } from '../../domain/entities/order';
+import { OrderLine } from '../../domain/value-objects/order-line';
 import { cancelOrder } from './cancel-order';
-import { CancelOrderApi } from './ports/cancel-order-api';
+import { CancelOrderApi } from '../ports/cancel-order-api';
 
 describe('cancelOrder', () => {
   it('should ask the order api to cancel a submitted order', async () => {
