@@ -105,4 +105,39 @@ describe('GraphqlOrderApi', () => {
       },
     ]);
   });
+
+  it('should place an order through GraphQL', async () => {
+    const placeOrderPromise = orderApi.placeOrder('ORD-1001');
+
+    const request = httpTesting.expectOne('/graphql');
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      query: expect.stringContaining('placeOrder'),
+      variables: {
+        orderId: 'ORD-1001',
+      },
+    });
+
+    request.flush({
+      data: {
+        placeOrder: {
+          id: 'ORD-1001',
+          status: 'Submitted',
+          lines: [
+            {
+              productName: 'Mechanical Keyboard',
+              quantity: 1,
+              unitPrice: 129.99,
+            },
+          ],
+          total: 129.99,
+        },
+      },
+    });
+
+    await expect(placeOrderPromise).resolves.toEqual(
+      new Order('ORD-1001', 'Submitted', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
+    );
+  });
 });
