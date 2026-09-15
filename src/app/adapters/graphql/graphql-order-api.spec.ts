@@ -140,4 +140,39 @@ describe('GraphqlOrderApi', () => {
       new Order('ORD-1001', 'Submitted', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
     );
   });
+
+  it('should cancel an order through GraphQL', async () => {
+    const cancelOrderPromise = orderApi.cancelOrder('ORD-1002');
+
+    const request = httpTesting.expectOne('/graphql');
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      query: expect.stringContaining('cancelOrder'),
+      variables: {
+        orderId: 'ORD-1002',
+      },
+    });
+
+    request.flush({
+      data: {
+        cancelOrder: {
+          id: 'ORD-1002',
+          status: 'Cancelled',
+          lines: [
+            {
+              productName: 'Mechanical Keyboard',
+              quantity: 1,
+              unitPrice: 129.99,
+            },
+          ],
+          total: 129.99,
+        },
+      },
+    });
+
+    await expect(cancelOrderPromise).resolves.toEqual(
+      new Order('ORD-1002', 'Cancelled', [new OrderLine('Mechanical Keyboard', 1, 129.99)], 129.99),
+    );
+  });
 });
