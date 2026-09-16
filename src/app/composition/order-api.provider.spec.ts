@@ -4,8 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { GraphqlOrderApi } from '../adapters/graphql/graphql-order-api';
 import { RestOrderApi } from '../adapters/rest/rest-order-api';
 import { ORDER_API } from '../application/ports/order-api.token';
-import { REST_ORDER_API_PROVIDER } from './order-api.provider.rest';
-import { GRAPHQL_ORDER_API_PROVIDER } from './order-api.provider.graphql';
+import { ORDER_API_PROVIDER as REST_ORDER_API_PROVIDER } from './order-api.provider.rest';
+import { ORDER_API_PROVIDER as GRAPHQL_ORDER_API_PROVIDER } from './order-api.provider.graphql';
 
 describe('OrderApi composition', () => {
   afterEach(() => {
@@ -17,9 +17,7 @@ describe('OrderApi composition', () => {
       providers: [provideHttpClient(), REST_ORDER_API_PROVIDER],
     });
 
-    const orderApi = TestBed.inject(ORDER_API);
-
-    expect(orderApi).toBeInstanceOf(RestOrderApi);
+    expect(TestBed.inject(ORDER_API)).toBeInstanceOf(RestOrderApi);
   });
 
   it('provides the GraphQL adapter for the GraphQL composition', () => {
@@ -27,8 +25,6 @@ describe('OrderApi composition', () => {
       providers: [provideHttpClient(), GRAPHQL_ORDER_API_PROVIDER],
     });
 
-    const orderApi = TestBed.inject(ORDER_API);
-
-    expect(orderApi).toBeInstanceOf(GraphqlOrderApi);
+    expect(TestBed.inject(ORDER_API)).toBeInstanceOf(GraphqlOrderApi);
   });
 });

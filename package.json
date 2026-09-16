@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "concurrently --kill-others -n frontend,rest-api \"npm:serve\" \"npm:mock-rest\"",
-    "mock-rest": "node public/development_test_server/rest/server.mjs",
-    "mock-graphql": "node public/development_test_server/graphql/server.mjs",
+    "mock-rest": "node development-server/rest/server.mjs",
+    "mock-graphql": "node development-server/graphql/server.mjs",
     "serve": "ng serve",
     "serve:rest-api": "ng serve --configuration=rest-api",
     "serve:graphql-api": "ng serve --configuration=graphql-api",

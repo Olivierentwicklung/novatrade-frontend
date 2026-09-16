@@ -5,7 +5,7 @@ import { buildSchema, graphql } from 'graphql';
 
 const PORT = 3000;
 
-const dbPath = fileURLToPath(new URL('../rest/db.json', import.meta.url));
+const dbPath = fileURLToPath(new URL('../data/db.json', import.meta.url));
 
 const schema = buildSchema(`
   type OrderLine {
