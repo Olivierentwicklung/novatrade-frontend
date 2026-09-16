@@ -63,8 +63,8 @@
                   "with": "src/environments/environment.development.ts"
                 },
                 {
-                  "replace": "src/app/composition/order-api.provider.ts",
-                  "with": "src/app/composition/order-api.provider.rest.ts"
+                  "replace": "src/app/infrastructure/composition/order-api.provider.ts",
+                  "with": "src/app/infrastructure/composition/order-api.provider.rest.ts"
                 }
               ]
             },
@@ -78,8 +78,8 @@
                   "with": "src/environments/environment.development.ts"
                 },
                 {
-                  "replace": "src/app/composition/order-api.provider.ts",
-                  "with": "src/app/composition/order-api.provider.graphql.ts"
+                  "replace": "src/app/infrastructure/composition/order-api.provider.ts",
+                  "with": "src/app/infrastructure/composition/order-api.provider.graphql.ts"
                 }
               ]
             }

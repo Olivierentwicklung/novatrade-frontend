@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { InMemoryOrderApi } from './adapters/in-memory/in-memory-order-api';
+import { InMemoryOrderApi } from './infrastructure/adapters/in-memory/in-memory-order-api';
 import { ORDER_API } from './application/ports/order-api.token';
 import { App } from './app';
 

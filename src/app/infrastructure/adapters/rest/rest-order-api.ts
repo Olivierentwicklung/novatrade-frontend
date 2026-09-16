@@ -2,13 +2,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { OrderApi } from '../../application/ports/order-api';
-import { Order } from '../../domain/entities/order';
-import { OrderLine } from '../../domain/value-objects/order-line';
+import { environment } from '../../../../environments/environment';
+import { OrderApi } from '../../../application/ports/order-api';
+import { Order } from '../../../domain/entities/order';
+import { OrderLine } from '../../../domain/value-objects/order-line';
 import { OrderDto } from './order-dto';
-import { OrderPlacementRejected } from '../../application/errors/order-placement-rejected';
-import { OrderSummary } from '../../application/ports/order-read-api';
+import { OrderPlacementRejected } from '../../../application/errors/order-placement-rejected';
+import { OrderSummary } from '../../../application/ports/order-read-api';
 
 @Injectable()
 export class RestOrderApi implements OrderApi {
