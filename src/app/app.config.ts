@@ -2,17 +2,13 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
-import { RestOrderApi } from './adapters/rest/rest-order-api';
-import { ORDER_API } from './application/ports/order-api.token';
+import { ORDER_API_PROVIDER } from './infrastructure/composition/order-api.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(),
-    {
-      provide: ORDER_API,
-      useClass: RestOrderApi,
-    },
+    ORDER_API_PROVIDER,
   ],
 };

@@ -1,8 +1,5 @@
 import { copyFileSync } from 'node:fs';
 
-copyFileSync(
-  'public/development_test_server/rest/db.fixture.json',
-  'public/development_test_server/rest/db.json',
-);
+copyFileSync('development-server/data/db.fixture.json', 'development-server/data/db.json');
 
-console.log('Development REST database reset.');
+console.log('Development database reset.');

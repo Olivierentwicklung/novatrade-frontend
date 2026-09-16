@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const PORT = 3000;
 
-const dbPath = fileURLToPath(new URL('./db.json', import.meta.url));
+const dbPath = fileURLToPath(new URL('../data/db.json', import.meta.url));
 
 async function readDb() {
   const content = await readFile(dbPath, 'utf8');

@@ -52,6 +52,36 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
+            },
+            "rest-api": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                },
+                {
+                  "replace": "src/app/infrastructure/composition/order-api.provider.ts",
+                  "with": "src/app/infrastructure/composition/order-api.provider.rest.ts"
+                }
+              ]
+            },
+            "graphql-api": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                },
+                {
+                  "replace": "src/app/infrastructure/composition/order-api.provider.ts",
+                  "with": "src/app/infrastructure/composition/order-api.provider.graphql.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -67,6 +97,12 @@
             },
             "development": {
               "buildTarget": "novatrade-frontend:build:development"
+            },
+            "rest-api": {
+              "buildTarget": "novatrade-frontend:build:rest-api"
+            },
+            "graphql-api": {
+              "buildTarget": "novatrade-frontend:build:graphql-api"
             }
           },
           "defaultConfiguration": "development"
