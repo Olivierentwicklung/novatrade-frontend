@@ -14,8 +14,12 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "reset:development-db": "node e2e/scripts/reset-development-db.mjs",
-    "e2e": "npm run reset:development-db && playwright test",
-    "e2e:ui": "npm run reset:development-db && playwright test --ui"
+    "e2e": "npm run e2e:rest",
+    "e2e:rest": "npm run reset:development-db && playwright test --config=e2e/config/playwright.rest.config.ts",
+    "e2e:graphql": "npm run reset:development-db && playwright test --config=e2e/config/playwright.graphql.config.ts",
+    "e2e:ui": "npm run reset:development-db && playwright test --ui",
+    "e2e:rest:ui": "npm run reset:development-db && playwright test --ui --config=e2e/config/playwright.rest.config.ts",
+    "e2e:graphql:ui": "npm run reset:development-db && playwright test --ui --config=e2e/config/playwright.graphql.config.ts"
   },
   "prettier": {
     "printWidth": 100,
