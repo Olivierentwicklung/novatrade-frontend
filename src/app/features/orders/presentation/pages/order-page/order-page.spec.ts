@@ -4,14 +4,12 @@ import { Location } from '@angular/common';
 import { provideRouter } from '@angular/router';
 
 import { OrderPage } from './order-page';
-import { OrderEditor } from '../order-editor/order-editor';
-import { OrderApi } from '../../../../application/ports/order-api';
-
-import { ORDER_API } from '../../../../application/ports/order-api.token';
-import { Order } from '../../../../domain/entities/order';
-import { OrderLine } from '../../../../domain/value-objects/order-line';
-
-import { OrderPlacementRejected } from '../../../../application/errors/order-placement-rejected';
+import { OrderApi } from '../../../../../application/ports/order-api';
+import { Order } from '../../../../../domain/entities/order';
+import { OrderLine } from '../../../../../domain/value-objects/order-line';
+import { ORDER_API } from '../../di/order-api.token';
+import { OrderEditor } from '../components/order-editor/order-editor';
+import { OrderPlacementRejected } from '../../../../../application/errors/order-placement-rejected';
 
 describe('OrderPage', () => {
   // Build the OrderPage test mock directly from OrderApi.

@@ -2,19 +2,19 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { email, form, FormField, required } from '@angular/forms/signals';
 import { Location } from '@angular/common';
 
-import { loadOrder } from '../../../../application/use-cases/load-order';
-import { placeOrder } from '../../../../application/use-cases/place-order';
-import { Order } from '../../../../domain/entities/order';
-import { OrderEditor } from '../order-editor/order-editor';
-import { OrderReview } from '../order-review/order-review';
-import { OrderList } from '../order-list/order-list';
+import { loadOrder } from '../../../../../application/use-cases/load-order';
+import { placeOrder } from '../../../../../application/use-cases/place-order';
+import { Order } from '../../../../../domain/entities/order';
+import { OrderEditor } from '../components/order-editor/order-editor';
+import { OrderReview } from '../components/order-review/order-review';
+import { OrderList } from '../components/order-list/order-list';
 
-import { ORDER_API } from '../../../../application/ports/order-api.token';
-import { OrderPlacementRejected } from '../../../../application/errors/order-placement-rejected';
+import { OrderPlacementRejected } from '../../../../../application/errors/order-placement-rejected';
 
-import { listOrders } from '../../../../application/use-cases/list-orders';
-import { OrderSummary } from '../../../../application/ports/order-read-api';
-import { cancelOrder } from '../../../../application/use-cases/cancel-order';
+import { listOrders } from '../../../../../application/use-cases/list-orders';
+import { OrderSummary } from '../../../../../application/ports/order-read-api';
+import { cancelOrder } from '../../../../../application/use-cases/cancel-order';
+import { ORDER_API } from '../../di/order-api.token';
 
 interface CheckoutDetails {
   email: string;

@@ -1,8 +1,8 @@
 import { Component, computed, input, output } from '@angular/core';
 
-import { calculateOrderTotal } from '../../../../domain/calculate-order-total';
-import { Order } from '../../../../domain/entities/order';
-import { OrderLine } from '../../../../domain/value-objects/order-line';
+import { calculateOrderTotal } from '../../../../../../domain/calculate-order-total';
+import { Order } from '../../../../../../domain/entities/order';
+import { OrderLine } from '../../../../../../domain/value-objects/order-line';
 
 @Component({
   selector: 'app-order-editor',

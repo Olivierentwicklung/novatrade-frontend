@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { InMemoryOrderApi } from './infrastructure/adapters/in-memory/in-memory-order-api';
-import { ORDER_API } from './application/ports/order-api.token';
+
 import { App } from './app';
+import { ORDER_API } from './features/orders/presentation/di/order-api.token';
 
 describe('App', () => {
   beforeEach(async () => {
