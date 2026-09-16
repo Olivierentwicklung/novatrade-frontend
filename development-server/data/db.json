@@ -19,7 +19,7 @@
     },
     {
       "id": "ORD-1002",
-      "status": "Cancelled",
+      "status": "Submitted",
       "lines": [
         {
           "product_name": "USB-C Hub",
