@@ -97,6 +97,12 @@
             },
             "development": {
               "buildTarget": "novatrade-frontend:build:development"
+            },
+            "rest-api": {
+              "buildTarget": "novatrade-frontend:build:rest-api"
+            },
+            "graphql-api": {
+              "buildTarget": "novatrade-frontend:build:graphql-api"
             }
           },
           "defaultConfiguration": "development"

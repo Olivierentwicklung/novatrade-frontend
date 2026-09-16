@@ -6,6 +6,8 @@
     "start": "concurrently --kill-others -n frontend,rest-api \"npm:serve\" \"npm:mock-rest\"",
     "mock-rest": "node public/development_test_server/rest/server.mjs",
     "serve": "ng serve",
+    "serve:rest-api": "ng serve --configuration=rest-api",
+    "serve:graphql-api": "ng serve --configuration=graphql-api",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
