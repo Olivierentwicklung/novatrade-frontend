@@ -49,7 +49,7 @@ describe('React App', () => {
 
     render(<App orderId="ORD-1002" />);
 
-    expect(await screen.findByText('ORD-1002')).toBeInTheDocument();
+    expect(await screen.findByText('ORD-1002')).toBeTruthy();
 
     await user.click(
       screen.getByRole('button', {

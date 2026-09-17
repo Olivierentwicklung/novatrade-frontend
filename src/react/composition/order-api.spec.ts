@@ -87,4 +87,67 @@ describe('React OrderApi composition', () => {
       ),
     );
   });
+
+  it('lists compact order summaries through the REST backend contract', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(
+        JSON.stringify([
+          {
+            id: 'ORD-1001',
+            status: 'Submitted',
+            lines: [
+              {
+                product_name: 'Mechanical Keyboard',
+                quantity: 1,
+                unit_price: 129.99,
+              },
+            ],
+            total: 129.99,
+          },
+          {
+            id: 'ORD-1002',
+            status: 'Draft',
+            lines: [
+              {
+                product_name: 'Wireless Mouse',
+                quantity: 2,
+                unit_price: 49.99,
+              },
+              {
+                product_name: 'USB-C Cable',
+                quantity: 1,
+                unit_price: 19.99,
+              },
+            ],
+            total: 119.97,
+          },
+        ]),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      ),
+    );
+
+    const orderApi = createOrderApi();
+
+    await expect(orderApi.listOrders()).resolves.toEqual([
+      {
+        id: 'ORD-1001',
+        status: 'Submitted',
+        total: 129.99,
+        itemCount: 1,
+      },
+      {
+        id: 'ORD-1002',
+        status: 'Draft',
+        total: 119.97,
+        itemCount: 2,
+      },
+    ]);
+
+    expect(globalThis.fetch).toHaveBeenCalledWith('/api/orders');
+  });
 });
