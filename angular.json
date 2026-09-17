@@ -16,7 +16,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
+            "browser": "src/angular/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -63,8 +63,8 @@
                   "with": "src/environments/environment.development.ts"
                 },
                 {
-                  "replace": "src/app/infrastructure/composition/order-api.provider.ts",
-                  "with": "src/app/infrastructure/composition/order-api.provider.rest.ts"
+                  "replace": "src/angular/composition/order-api.provider.ts",
+                  "with": "src/angular/composition/order-api.provider.rest.ts"
                 }
               ]
             },
@@ -78,8 +78,8 @@
                   "with": "src/environments/environment.development.ts"
                 },
                 {
-                  "replace": "src/app/infrastructure/composition/order-api.provider.ts",
-                  "with": "src/app/infrastructure/composition/order-api.provider.graphql.ts"
+                  "replace": "src/angular/composition/order-api.provider.ts",
+                  "with": "src/angular/composition/order-api.provider.graphql.ts"
                 }
               ]
             }

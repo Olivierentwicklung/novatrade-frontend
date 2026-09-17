@@ -2,7 +2,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
-import { ORDER_API_PROVIDER } from './infrastructure/composition/order-api.provider';
+import { ORDER_API_PROVIDER } from '../composition/order-api.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
