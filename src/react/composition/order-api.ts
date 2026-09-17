@@ -1,9 +1,9 @@
 import { CancelOrderApi } from '../../core/application/ports/cancel-order-api';
-import { OrderReadApi } from '../../core/application/ports/order-read-api';
+import { OrderReadApi, OrderSummary } from '../../core/application/ports/order-read-api';
 import { Order } from '../../core/domain/entities/order';
 import { OrderLine } from '../../core/domain/value-objects/order-line';
 
-type ReactOrderApi = CancelOrderApi & Pick<OrderReadApi, 'getOrder'>;
+type ReactOrderApi = CancelOrderApi & OrderReadApi;
 
 type OrderDto = {
   id: string;
@@ -47,6 +47,23 @@ export function createOrderApi(): ReactOrderApi {
       if (!response.ok) {
         throw new Error(`Failed to cancel order ${orderId}.`);
       }
+    },
+
+    async listOrders(): Promise<OrderSummary[]> {
+      const response = await fetch('/api/orders');
+
+      if (!response.ok) {
+        throw new Error('Failed to load orders.');
+      }
+
+      const data = (await response.json()) as OrderDto[];
+
+      return data.map((order) => ({
+        id: order.id,
+        status: order.status,
+        total: order.total,
+        itemCount: order.lines.length,
+      }));
     },
   };
 }
