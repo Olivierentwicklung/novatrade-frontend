@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { loadOrder } from '../../../../../application/use-cases/load-order';
 import { placeOrder } from '../../../../../application/use-cases/place-order';
-import { Order } from '../../../../../domain/entities/order';
+import { Order } from '../../../../../../core/domain/entities/order';
 import { OrderEditor } from '../components/order-editor/order-editor';
 import { OrderReview } from '../components/order-review/order-review';
 import { OrderList } from '../components/order-list/order-list';

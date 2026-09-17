@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
-import { Order } from '../../domain/entities/order';
-import { OrderLine } from '../../domain/value-objects/order-line';
+import { Order } from '../../../core/domain/entities/order';
+import { OrderLine } from '../../../core/domain/value-objects/order-line';
 import { cancelOrder } from './cancel-order';
 import { CancelOrderApi } from '../ports/cancel-order-api';
 

@@ -1,4 +1,4 @@
-import { Order } from '../../domain/entities/order';
+import { Order } from '../../../core/domain/entities/order';
 import { CancelOrderApi } from '../ports/cancel-order-api';
 
 export async function cancelOrder(order: Order, orderApi: CancelOrderApi): Promise<void> {

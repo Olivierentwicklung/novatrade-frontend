@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-import { Order } from '../../../domain/entities/order';
-import { OrderLine } from '../../../domain/value-objects/order-line';
+import { Order } from '../../../../core/domain/entities/order';
+import { OrderLine } from '../../../../core/domain/value-objects/order-line';
 import { OrderSummary } from '../../../application/ports/order-read-api';
 
 import { OrderApi } from '../../../application/ports/order-api';

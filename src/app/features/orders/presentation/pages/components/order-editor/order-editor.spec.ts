@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, vi } from 'vitest';
 
 import { OrderEditor } from './order-editor';
-import { Order } from '../../../../../../domain/entities/order';
-import { OrderLine } from '../../../../../../domain/value-objects/order-line';
+
+import { Order } from '../../../../../../../core/domain/entities/order';
+import { OrderLine } from '../../../../../../../core/domain/value-objects/order-line';
 
 describe('Order Editor', () => {
   beforeEach(async () => {
