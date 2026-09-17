@@ -2,18 +2,18 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { email, form, FormField, required } from '@angular/forms/signals';
 import { Location } from '@angular/common';
 
-import { loadOrder } from '../../../../../application/use-cases/load-order';
-import { placeOrder } from '../../../../../application/use-cases/place-order';
+import { loadOrder } from '../../../../../../core/application/use-cases/load-order';
+import { placeOrder } from '../../../../../../core/application/use-cases/place-order';
 import { Order } from '../../../../../../core/domain/entities/order';
 import { OrderEditor } from '../components/order-editor/order-editor';
 import { OrderReview } from '../components/order-review/order-review';
 import { OrderList } from '../components/order-list/order-list';
 
-import { OrderPlacementRejected } from '../../../../../application/errors/order-placement-rejected';
+import { OrderPlacementRejected } from '../../../../../../core/application/errors/order-placement-rejected';
 
-import { listOrders } from '../../../../../application/use-cases/list-orders';
-import { OrderSummary } from '../../../../../application/ports/order-read-api';
-import { cancelOrder } from '../../../../../application/use-cases/cancel-order';
+import { listOrders } from '../../../../../../core/application/use-cases/list-orders';
+import { OrderSummary } from '../../../../../../core/application/ports/order-read-api';
+import { cancelOrder } from '../../../../../../core/application/use-cases/cancel-order';
 import { ORDER_API } from '../../di/order-api.token';
 
 interface CheckoutDetails {

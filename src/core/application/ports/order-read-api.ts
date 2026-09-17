@@ -1,4 +1,4 @@
-import { Order } from '../../../core/domain/entities/order';
+import { Order } from '../../domain/entities/order';
 export interface OrderSummary {
   id: string;
   status: string;
