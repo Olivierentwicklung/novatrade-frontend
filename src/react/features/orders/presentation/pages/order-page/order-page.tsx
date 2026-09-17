@@ -1,18 +1,19 @@
+import { CancelOrderApi } from '../../../../../../core/application/ports/cancel-order-api';
+import { cancelOrder } from '../../../../../../core/application/use-cases/cancel-order';
+import { Order } from '../../../../../../core/domain/entities/order';
+
 type OrderPageProps = {
-  order: {
-    id: string;
-    status: string;
-  };
-  cancelOrder: (orderId: string) => Promise<void>;
+  order: Order;
+  orderApi: CancelOrderApi;
 };
 
-export function OrderPage({ order, cancelOrder }: OrderPageProps) {
+export function OrderPage({ order, orderApi }: OrderPageProps) {
   return (
     <section>
       <p>{order.id}</p>
       <p>{order.status}</p>
 
-      <button type="button" onClick={() => cancelOrder(order.id)}>
+      <button type="button" onClick={() => cancelOrder(order, orderApi)}>
         Cancel order
       </button>
     </section>
