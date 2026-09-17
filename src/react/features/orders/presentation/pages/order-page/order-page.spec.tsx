@@ -5,10 +5,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { CancelOrderApi } from '../../../../../../core/application/ports/cancel-order-api';
 import { Order } from '../../../../../../core/domain/entities/order';
 import { OrderLine } from '../../../../../../core/domain/value-objects/order-line';
+import { OrderApiProvider } from '../../context/order-api.context';
 import { OrderPage } from './order-page';
 
 describe('OrderPage', () => {
-  it('cancels the order through the existing application capability', async () => {
+  it('cancels the order through the React-owned capability binding', async () => {
     const order = new Order('ORD-1002', 'Submitted', [new OrderLine('USB-C Hub', 1, 69.99)], 69.99);
 
     const orderApi: CancelOrderApi = {
@@ -17,7 +18,11 @@ describe('OrderPage', () => {
 
     const user = userEvent.setup();
 
-    render(<OrderPage order={order} orderApi={orderApi} />);
+    render(
+      <OrderApiProvider orderApi={orderApi}>
+        <OrderPage order={order} />
+      </OrderApiProvider>,
+    );
 
     await user.click(
       screen.getByRole('button', {
