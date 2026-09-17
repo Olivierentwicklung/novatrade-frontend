@@ -1,13 +1,14 @@
-import { CancelOrderApi } from '../../../../../../core/application/ports/cancel-order-api';
 import { cancelOrder } from '../../../../../../core/application/use-cases/cancel-order';
 import { Order } from '../../../../../../core/domain/entities/order';
+import { useOrderApi } from '../../context/order-api.context';
 
 type OrderPageProps = {
   order: Order;
-  orderApi: CancelOrderApi;
 };
 
-export function OrderPage({ order, orderApi }: OrderPageProps) {
+export function OrderPage({ order }: OrderPageProps) {
+  const orderApi = useOrderApi();
+
   return (
     <section>
       <p>{order.id}</p>
