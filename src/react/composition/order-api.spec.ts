@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createOrderApi } from './order-api';
+import { Order } from '../../core/domain/entities/order';
+import { OrderLine } from '../../core/domain/value-objects/order-line';
 
 describe('React OrderApi composition', () => {
   afterEach(() => {
@@ -38,6 +40,51 @@ describe('React OrderApi composition', () => {
 
     await expect(orderApi.cancelOrder('ORD-1002')).rejects.toThrow(
       'Failed to cancel order ORD-1002.',
+    );
+  });
+
+  it('loads an order through the REST backend contract', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          id: 'ORD-1002',
+          status: 'Submitted',
+          lines: [
+            {
+              product_name: 'USB-C Hub',
+              quantity: 1,
+              unit_price: 69.99,
+            },
+            {
+              product_name: 'USB-C Cable',
+              quantity: 2,
+              unit_price: 19.99,
+            },
+          ],
+          total: 109.97,
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      ),
+    );
+
+    const orderApi = createOrderApi();
+
+    const order = await orderApi.getOrder('ORD-1002');
+
+    expect(globalThis.fetch).toHaveBeenCalledWith('/api/orders/ORD-1002');
+
+    expect(order).toEqual(
+      new Order(
+        'ORD-1002',
+        'Submitted',
+        [new OrderLine('USB-C Hub', 1, 69.99), new OrderLine('USB-C Cable', 2, 19.99)],
+        109.97,
+      ),
     );
   });
 });
