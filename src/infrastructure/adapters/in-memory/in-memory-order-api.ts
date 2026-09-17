@@ -1,6 +1,6 @@
-import { OrderApi } from '../../../../core/application/ports/order-api';
-import { OrderSummary } from '../../../../core/application/ports/order-read-api';
-import { Order } from '../../../../core/domain/entities/order';
+import { OrderApi } from '../../../core/application/ports/order-api';
+import { OrderSummary } from '../../../core/application/ports/order-read-api';
+import { Order } from '../../../core/domain/entities/order';
 
 export class InMemoryOrderApi implements OrderApi {
   readonly placedOrderIds: string[] = [];

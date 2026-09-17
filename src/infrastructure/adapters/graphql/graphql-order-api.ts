@@ -2,11 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-import { Order } from '../../../../core/domain/entities/order';
-import { OrderLine } from '../../../../core/domain/value-objects/order-line';
-import { OrderSummary } from '../../../../core/application/ports/order-read-api';
+import { Order } from '../../../core/domain/entities/order';
+import { OrderLine } from '../../../core/domain/value-objects/order-line';
+import { OrderSummary } from '../../../core/application/ports/order-read-api';
 
-import { OrderApi } from '../../../../core/application/ports/order-api';
+import { OrderApi } from '../../../core/application/ports/order-api';
 
 interface GraphqlOrderResponse {
   data: {

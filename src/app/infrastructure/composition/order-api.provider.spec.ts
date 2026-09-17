@@ -1,8 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
-import { GraphqlOrderApi } from '../adapters/graphql/graphql-order-api';
-import { RestOrderApi } from '../adapters/rest/rest-order-api';
+import { GraphqlOrderApi } from '../../../infrastructure/adapters/graphql/graphql-order-api';
+import { RestOrderApi } from '../../../infrastructure/adapters/rest/rest-order-api';
 
 import { ORDER_API_PROVIDER as REST_ORDER_API_PROVIDER } from './order-api.provider.rest';
 import { ORDER_API_PROVIDER as GRAPHQL_ORDER_API_PROVIDER } from './order-api.provider.graphql';

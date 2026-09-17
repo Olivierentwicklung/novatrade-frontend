@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { Order } from '../../../../core/domain/entities/order';
-import { OrderLine } from '../../../../core/domain/value-objects/order-line';
+import { Order } from '../../../core/domain/entities/order';
+import { OrderLine } from '../../../core/domain/value-objects/order-line';
 import { RestOrderApi } from './rest-order-api';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 describe('RestOrderApi', () => {
   let http: HttpClient;
