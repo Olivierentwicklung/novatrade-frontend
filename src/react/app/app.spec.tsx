@@ -2,8 +2,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { Order } from '../../core/domain/entities/order';
-import { OrderLine } from '../../core/domain/value-objects/order-line';
 import { App } from './app';
 
 describe('React App', () => {
@@ -11,18 +9,47 @@ describe('React App', () => {
     vi.restoreAllMocks();
   });
 
-  it('cancels a submitted order through the composed React application', async () => {
-    const order = new Order('ORD-1002', 'Submitted', [new OrderLine('USB-C Hub', 1, 69.99)], 69.99);
-
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      new Response(null, {
-        status: 200,
-      }),
-    );
+  it('loads and cancels an order through the composed React application', async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            id: 'ORD-1002',
+            status: 'Submitted',
+            lines: [
+              {
+                product_name: 'USB-C Hub',
+                quantity: 1,
+                unit_price: 69.99,
+              },
+              {
+                product_name: 'USB-C Cable',
+                quantity: 2,
+                unit_price: 19.99,
+              },
+            ],
+            total: 109.97,
+          }),
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        ),
+      )
+      .mockResolvedValueOnce(
+        new Response(null, {
+          status: 200,
+        }),
+      );
 
     const user = userEvent.setup();
 
-    render(<App order={order} />);
+    render(<App orderId="ORD-1002" />);
+
+    expect(await screen.findByText('ORD-1002')).toBeInTheDocument();
 
     await user.click(
       screen.getByRole('button', {
@@ -30,13 +57,14 @@ describe('React App', () => {
       }),
     );
 
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/orders/ORD-1002');
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
       '/api/orders/ORD-1002/cancel',
       expect.objectContaining({
         method: 'POST',
       }),
     );
-
-    expect(order.status).toBe('Cancelled');
   });
 });
